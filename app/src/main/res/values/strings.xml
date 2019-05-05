@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Organa</string>
     <string name="action_settings">Settings</string>
+    <string name="name_caps">NAME</string>
+    <string name="path_caps">PATH</string>
+    <string name="count">Count</string>
+    <string name="panel">PANEL</string>
 </resources>
