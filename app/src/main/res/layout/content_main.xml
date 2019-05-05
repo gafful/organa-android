@@ -17,18 +17,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/dashboard_dest_btn"
             android:id="@+id/dashboard_source_btn"
-            android:textColor="@color/tint_1"
-            android:background="@color/colorPrimaryDark"
-            android:text="SOURCE"/>
-
-    <com.google.android.material.button.MaterialButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/dashboard_source_btn"
-            android:id="@+id/dashboard_dest_btn"
-            android:text="DESTINATION"/>
+            style="@style/PanelButton"
+            android:text="@string/source"/>
 
     <LinearLayout android:layout_width="0dp"
                   android:layout_height="wrap_content"
@@ -92,6 +82,82 @@
                   <!--android:layout_height="wrap_content"-->
                   <!--android:id="@+id/dashboard_src_panel_file_clean_count_label"-->
                   <!--android:text="Clean Count"/>-->
+
+    </LinearLayout>
+
+
+    <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/dashboard_source_btn"
+            android:id="@+id/dashboard_dest_btn"
+            style="@style/PanelButton"
+            android:text="@string/destination"/>
+
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintStart_toStartOf="@+id/dashboard_dest_btn"
+                  app:layout_constraintTop_toBottomOf="@+id/dashboard_dest_btn"
+                  app:layout_constraintEnd_toEndOf="@id/dashboard_dest_btn"
+                  android:layout_marginTop="5dp"
+                  android:orientation="vertical">
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/dashboard_dest_panel_label"
+                  style="@style/PanelLabelTextView"
+                  android:gravity="center"
+                  android:text="@string/panel"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/dashboard_dest_panel_name"
+                  style="@style/PanelTextView"
+                  tools:text="Nwom"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/dashboard_dest_panel_name_label"
+                  style="@style/PanelLabelTextView"
+                  android:text="@string/name_caps"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  style="@style/PanelTextView"
+                  android:id="@+id/dashboard_dest_panel_path"
+                  tools:text="/path/to/directory"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  style="@style/PanelLabelTextView"
+                  android:id="@+id/dashboard_dest_panel_path_label"
+                  android:text="@string/path_caps"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  style="@style/PanelTextView"
+                  android:id="@+id/dashboard_dest_panel_file_count"
+                  tools:text="230"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/dashboard_dest_panel_file_count_label"
+                  style="@style/PanelLabelTextView"
+                  android:text="@string/count"/>
+
+        <!--Live Update-->
+
+        <!--<TextView android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/dashboard_src_panel_file_clean_count"-->
+        <!--android:text="230"/>-->
+
+        <!--<TextView android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/dashboard_src_panel_file_clean_count_label"-->
+        <!--android:text="Clean Count"/>-->
 
     </LinearLayout>
 
