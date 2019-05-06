@@ -1,6 +1,7 @@
 package com.mukaase.android.organa
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,8 @@ class DashboardActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+
+        dashboard_power_switch.frame = 35
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -60,41 +63,46 @@ class DashboardActivity : AppCompatActivity() {
 //                updateRenderTimesPerLayer()
             }
         )
-//        dashboard_power_switch.imageAssetsFolder = "lottie/"
-//        dashboard_power_switch.setAnimation("lottie/switch_power_2.json")
         dashboard_power_switch.addAnimatorListener(animatorListener)
-        println("max frame: + ${dashboard_power_switch.maxFrame}")
         dashboard_power_switch.setMinAndMaxFrame(35, 47)
+
         dashboard_power_switch.playAnimation()
     }
 
     private fun runGears() {
         println("runGears")
         dashboard_gears.playAnimation()
-        val r = Runnable {
-//            sendMessage(MSG, params.id)
-//            taskFinished(params, false)
-            println("stop!!")
-            dashboard_gears.cancelAnimation()
-            dashboard_power_switch.setMinAndMaxFrame(1, 11)
-            dashboard_power_switch.playAnimation()
-        }
-        Handler().postDelayed(r, 10000)
+        timer(10000, 1000).start()
+//        val r = Runnable {
+////            sendMessage(MSG, params.id)
+////            taskFinished(params, false)
+//            println("stop!!")
+//            dashboard_gears.cancelAnimation()
+//            dashboard_power_switch.removeAllAnimatorListeners()
+//            dashboard_power_switch.setMinAndMaxFrame(1, 11)
+//            dashboard_power_switch.frame = 1
+//            dashboard_power_switch.playAnimation()
+//        }
+//        Handler().postDelayed(r, 10000)
     }
 
-//    // Method to configure and return an instance of CountDownTimer object
-//    private fun timer(millisInFuture:Long,countDownInterval:Long):CountDownTimer{
-//        return object: CountDownTimer(millisInFuture,countDownInterval){
-//            override fun onTick(millisUntilFinished: Long){
-//                println("*")
-//            }
-//
-//            override fun onFinish() {
-//                stopGears(false)
-//            }
-//        }
-//    }
-//
+    // Method to configure and return an instance of CountDownTimer object
+    private fun timer(millisInFuture:Long, countDownInterval:Long): CountDownTimer {
+        return object: CountDownTimer(millisInFuture,countDownInterval){
+            override fun onTick(millisUntilFinished: Long){
+                println("*")
+            }
+
+            override fun onFinish() {
+                dashboard_gears.cancelAnimation()
+                dashboard_power_switch.removeAllAnimatorListeners()
+                dashboard_power_switch.setMinAndMaxFrame(1, 11)
+                dashboard_power_switch.frame = 1
+                dashboard_power_switch.playAnimation()
+            }
+        }
+    }
+
 //    private fun stopGears(b: Boolean) {
 //        dashboard_gears.cancelAnimation()
 //    }
