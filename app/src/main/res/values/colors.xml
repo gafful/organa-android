@@ -8,6 +8,7 @@
     <color name="tint_1">#e6e9eb</color>
     <color name="button">#1c4a7c</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="background">#1F5FA5</color>
     <!--<color name="colorPrimary">#008577</color>-->
     <!--<color name="colorPrimaryDark">#00574B</color>-->
     <!--<color name="colorAccent">#D81B60</color>-->
