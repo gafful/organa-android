@@ -28,6 +28,16 @@
     </style>
     <style name="PanelButton" parent="Base.TextAppearance.MaterialComponents.Button">
         <item name="android:textColor">@color/tint_1</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/button</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="PanelSquare">
+        <item name="android:background">@drawable/transparent_bg_bordered</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_marginTop">4dp</item>
     </style>
 </resources>

@@ -19,12 +19,8 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
         dashboard_power_switch.frame = 35
+//        dashboard_panel_effects.playAnimation()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -72,6 +68,7 @@ class DashboardActivity : AppCompatActivity() {
     private fun runGears() {
         println("runGears")
         dashboard_gears.playAnimation()
+        dashboard_gears_outer.playAnimation()
         timer(10000, 1000).start()
 //        val r = Runnable {
 ////            sendMessage(MSG, params.id)
@@ -95,6 +92,7 @@ class DashboardActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 dashboard_gears.cancelAnimation()
+                dashboard_gears_outer.cancelAnimation()
                 dashboard_power_switch.removeAllAnimatorListeners()
                 dashboard_power_switch.setMinAndMaxFrame(1, 11)
                 dashboard_power_switch.frame = 1
