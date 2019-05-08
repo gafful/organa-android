@@ -14,11 +14,16 @@
     <string name="cleaned">[ CLEANED ]</string>
     <string name="skipped">[ SKIPPED ]</string>
     <string name="remaining">[ REMAINING ]</string>
-    <string name="progress_monitor">PROGRESS MONITOR</string>
     <string name="status">STATUS</string>
     <string name="space_left">SPACE LEFT</string>
     <string name="power">POWER</string>
     <string name="start">START</string>
     <string name="mp3">[ MP3 ]</string>
     <string name="size">SIZE</string>
+    <string name="display_monitor">DISPLAY MONITOR</string>
+    <string name="system_check">SYSTEM CHECK</string>
+    <string name="power_up_to_start">POWER UP TO START_</string>
+    <string name="btm_dashes">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</string>
+    <string name="mid_dashes">- - - - - - - - - - - - - - - - - - - - - - -</string>
+    <string name="_0">0</string>
 </resources>

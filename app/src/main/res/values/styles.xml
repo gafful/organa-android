@@ -20,14 +20,14 @@
         <item name="android:padding">5dp</item>
         <item name="android:textColor">@color/tint_1</item>
     </style>
-    <style name="PanelLabelTextView" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="PanelLabelTextView">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">12sp</item>
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:paddingEnd">5dp</item>
         <item name="android:paddingStart">5dp</item>
     </style>
-    <style name="PanelButton" parent="Base.TextAppearance.MaterialComponents.Button">
+    <style name="PanelButton">
         <item name="android:textColor">@color/tint_1</item>
         <item name="android:background">@color/button</item>
         <item name="android:layout_margin">3dp</item>
@@ -54,6 +54,12 @@
         <item name="android:gravity">center|top</item>
         <item name="android:textColor">@color/bright</item>
         <item name="android:textSize">12sp</item>
+    </style>
+    <style name="DisplayTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!--<item name="android:textColor">@color/bright_2</item>-->
+        <!--<item name="android:textSize">12sp</item>-->
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">

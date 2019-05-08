@@ -5,13 +5,11 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.view.*
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.children
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -34,6 +32,17 @@ class DashboardActivity : AppCompatActivity() {
 //            WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //            WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
+//        // Start Up
+//        dashboard_display_1.text = resources.getString(R.string.system_check)
+//        dashboard_display_1.setTextColor(resources.getColor(R.color.bright))
+//        dashboard_display_1.gravity = Gravity.CENTER
+//        dashboard_display_2.visibility = View.GONE
+//        dashboard_display_3.visibility = View.GONE
+//        dashboard_display_4.visibility = View.GONE
+//        dashboard_display_5.visibility = View.GONE
+//        dashboard_display_6.visibility = View.GONE
+
+//        dashboard_display_layout.children.iterator().
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -102,7 +111,7 @@ class DashboardActivity : AppCompatActivity() {
         return object: CountDownTimer(millisInFuture, countDownInterval){
             override fun onTick(millisUntilFinished: Long){
                 println("*")
-//                counter_progress_bar.progress += 10
+                counter_progress_bar.progress += 10
             }
 
             override fun onFinish() {
