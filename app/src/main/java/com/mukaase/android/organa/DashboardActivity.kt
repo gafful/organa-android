@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import androidx.core.graphics.drawable.toBitmap
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +28,11 @@ class DashboardActivity : AppCompatActivity() {
 //        val drawable = BitmapDrawable(resources, dashboard_active_bar_btm.drawable.toBitmap())
 //        drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
 //        mRelativeLayout.setBackground(drawable);
+
+
+//        window.setFlags(
+//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//            WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
     }
 
@@ -76,7 +82,7 @@ class DashboardActivity : AppCompatActivity() {
         println("runGears")
         dashboard_gears.playAnimation()
         dashboard_gears_outer.playAnimation()
-        dashboard_progress_indicator.playAnimation()
+//        dashboard_progress_indicator.playAnimation()
         timer(10000, 1000).start()
 //        val r = Runnable {
 ////            sendMessage(MSG, params.id)
@@ -93,15 +99,16 @@ class DashboardActivity : AppCompatActivity() {
 
     // Method to configure and return an instance of CountDownTimer object
     private fun timer(millisInFuture:Long, countDownInterval:Long): CountDownTimer {
-        return object: CountDownTimer(millisInFuture,countDownInterval){
+        return object: CountDownTimer(millisInFuture, countDownInterval){
             override fun onTick(millisUntilFinished: Long){
                 println("*")
+//                counter_progress_bar.progress += 10
             }
 
             override fun onFinish() {
                 dashboard_gears.cancelAnimation()
                 dashboard_gears_outer.cancelAnimation()
-                dashboard_progress_indicator.cancelAnimation()
+//                dashboard_progress_indicator.cancelAnimation()
                 dashboard_power_switch.removeAllAnimatorListeners()
                 dashboard_power_switch.setMinAndMaxFrame(1, 11)
                 dashboard_power_switch.frame = 1
