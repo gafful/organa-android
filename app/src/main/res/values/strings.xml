@@ -7,4 +7,13 @@
     <string name="panel">PANEL</string>
     <string name="destination">DESTINATION</string>
     <string name="source">SOURCE</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="cleaned">CLEANED</string>
+    <string name="skipped">SKIPPED</string>
+    <string name="remaining">REMAINING</string>
+    <string name="progress_monitor">PROGRESS MON</string>
+    <string name="status">STATUS</string>
 </resources>

@@ -11,8 +11,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
     <style name="PanelTextView" parent="TextAppearance.AppCompat">
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:background">@color/colorPrimary</item>
@@ -30,7 +30,6 @@
         <item name="android:textColor">@color/tint_1</item>
         <item name="android:background">@color/button</item>
         <item name="android:layout_margin">3dp</item>
-        <item name="android:textSize">16sp</item>
     </style>
     <style name="PanelSquare">
         <item name="android:background">@drawable/transparent_bg_bordered</item>
@@ -39,5 +38,32 @@
         <item name="android:paddingEnd">2dp</item>
         <item name="android:paddingBottom">2dp</item>
         <item name="android:layout_marginTop">4dp</item>
+    </style>
+    <style name="CounterTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/yellow</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+    <style name="CounterPaneLabelTextView">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center|top</item>
+        <item name="android:textColor">@color/bright</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 </resources>
