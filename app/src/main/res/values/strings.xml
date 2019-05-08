@@ -26,4 +26,6 @@
     <string name="btm_dashes">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</string>
     <string name="mid_dashes">- - - - - - - - - - - - - - - - - - - - - - -</string>
     <string name="_0">0</string>
+    <string name="set">SET</string>
+    <string name="settings">settings</string>
 </resources>
