@@ -1,17 +1,9 @@
 package com.mukaase.android.organa
 
-import android.graphics.Shader
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
-import android.view.*
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.children
-
-import kotlinx.android.synthetic.main.activity_main.*
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.content_main.*
 
 class DashboardActivity : AppCompatActivity() {
@@ -43,6 +35,8 @@ class DashboardActivity : AppCompatActivity() {
 //        dashboard_display_6.visibility = View.GONE
 
 //        dashboard_display_layout.children.iterator().
+
+        counter_remaining_label.isSelected = true
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -115,7 +109,7 @@ class DashboardActivity : AppCompatActivity() {
         return object: CountDownTimer(millisInFuture, countDownInterval){
             override fun onTick(millisUntilFinished: Long){
                 println("*")
-                counter_progress_bar.progress += 10
+//                counter_progress_bar.progress += 10
             }
 
             override fun onFinish() {

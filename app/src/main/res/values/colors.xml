@@ -6,14 +6,13 @@
     <color name="text">#869EB6</color>
     <color name="white">#FFFFFF</color>
     <color name="tint_1">#e6e9eb</color>
-    <color name="button">#1c4a7c</color>
     <color name="bright">#76F2FF</color>
+    <color name="button">#1c4a7c</color>
     <color name="bright_3">#153C79</color>
     <color name="bright_2">#49EC6F</color>
     <color name="yellow">#B4A20B</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="background">#0e253e</color>
-
     <color name="black_overlay">#66000000</color>
     <!--<color name="colorPrimary">#008577</color>-->
     <!--<color name="colorPrimaryDark">#00574B</color>-->

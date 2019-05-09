@@ -3,14 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="name_caps">NAME</string>
     <string name="path_caps">PATH</string>
-    <string name="count">Count</string>
     <string name="panel">ORGANA CONTROL BOARD</string>
     <string name="destination">DESTINATION</string>
     <string name="source">SOURCE</string>
 
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="cleaned">[ CLEANED ]</string>
     <string name="skipped">[ SKIPPED ]</string>
     <string name="remaining">[ REMAINING ]</string>
@@ -27,5 +23,5 @@
     <string name="mid_dashes">- - - - - - - - - - - - - - - - - - - - - - -</string>
     <string name="_0">0</string>
     <string name="set">SET</string>
-    <string name="settings">settings</string>
+    <string name="src_ok_dest_ok">SRC: OK || Dest: OK</string>
 </resources>
