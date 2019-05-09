@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:fontFamily">@font/electrolize</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -19,11 +20,19 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:padding">5dp</item>
         <item name="android:textColor">@color/tint_1</item>
+        <item name="android:fontFamily">@font/orbitron</item>
+
+        <!--Ellipsis-->
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:singleLine">true</item>
     </style>
     <style name="PanelLabelTextView">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:paddingEnd">5dp</item>
         <item name="android:paddingStart">5dp</item>
     </style>
@@ -46,7 +55,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/yellow</item>
         <item name="android:textSize">40sp</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:fontFamily">@font/orbitron</item>
     </style>
     <style name="CounterPaneLabelTextView">
         <item name="android:layout_width">match_parent</item>
@@ -66,8 +75,15 @@
     <style name="DisplayTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/orbitron</item>
         <!--<item name="android:textColor">@color/bright_2</item>-->
         <!--<item name="android:textSize">12sp</item>-->
+    </style>
+    <style name="StatsVerticalDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:layout_margin">2dp</item>
     </style>
 
     <style name="MarqueeTextView">

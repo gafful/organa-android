@@ -37,6 +37,16 @@ class DashboardActivity : AppCompatActivity() {
 //        dashboard_display_layout.children.iterator().
 
         counter_remaining_label.isSelected = true
+        dashboard_src_panel_name.isSelected = true
+        dashboard_src_panel_path.isSelected = true
+        dashboard_dest_panel_name.isSelected = true
+        dashboard_dest_panel_path.isSelected = true
+        dashboard_display_1.isSelected = true
+        dashboard_display_2.isSelected = true
+        dashboard_display_3.isSelected = true
+        dashboard_display_4.isSelected = true
+        dashboard_display_5.isSelected = true
+        dashboard_display_6.isSelected = true
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {

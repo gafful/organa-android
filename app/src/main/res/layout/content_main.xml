@@ -86,7 +86,7 @@
                       android:layout_height="wrap_content"
                       android:id="@+id/dashboard_src_panel_name_label"
                       style="@style/PanelLabelTextView"
-                      android:text="@string/name_caps"/>
+                      android:text="@string/name_caps" android:fontFamily="@font/electrolize"/>
 
             <TextView android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -196,11 +196,10 @@
               app:layout_constraintBottom_toTopOf="@+id/dashboard_counter_layout"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintEnd_toStartOf="@+id/guide_dashboard_vert"
-              android:background="@color/colorPrimaryDark"
               android:textSize="16sp"
               android:padding="4dp"
               android:gravity="center"
-              android:textColor="@color/colorPrimary"
+              android:textColor="@color/blue"
               android:text="@string/status"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -221,7 +220,7 @@
               android:textSize="16sp"
               android:padding="4dp"
               android:gravity="center"
-              android:textColor="@color/colorPrimary"
+              android:textColor="@color/blue"
               android:text="@string/power"/>
 
     <com.airbnb.lottie.LottieAnimationView
@@ -309,12 +308,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/display_monitor"
-            android:background="@color/colorPrimaryDark"
             android:textSize="16sp"
             android:padding="4dp"
             android:gravity="center"
             style="@style/MarqueeTextView"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/blue"
             app:layout_constraintTop_toBottomOf="@+id/power_display_hor_divider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guide_dashboard_vert"/>
@@ -329,7 +327,7 @@
             app:layout_constraintTop_toBottomOf="@+id/dashboard_counter_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guide_dashboard_vert"
-            app:layout_constraintBottom_toTopOf="@+id/dashboard_active_bar_btm">
+            app:layout_constraintBottom_toTopOf="@+id/blank">
 
         <TextView android:id="@+id/counter_mp3"
                   style="@style/CounterTextView"
@@ -337,28 +335,37 @@
         <TextView android:id="@+id/counter_mp3_label"
                   style="@style/CounterPaneLabelTextView"
                   android:text="@string/mp3"/>
+        <View style="@style/StatsVerticalDivider"/>
         <TextView android:id="@+id/counter_cleaned"
                   style="@style/CounterTextView"
                   android:text="@string/_0"/>
         <TextView android:id="@+id/counter_cleaned_label"
                   android:text="@string/cleaned"
                   style="@style/CounterPaneLabelTextView"/>
+        <View style="@style/StatsVerticalDivider"/>
         <TextView android:id="@+id/counter_skipped"
                   style="@style/CounterTextView"
                   android:text="@string/_0"/>
         <TextView android:id="@+id/counter_skipped_label"
                   android:text="@string/skipped"
                   style="@style/CounterPaneLabelTextView"/>
+        <View style="@style/StatsVerticalDivider"/>
         <TextView android:id="@+id/counter_remaining"
                   style="@style/CounterTextView"
                   android:text="@string/_0"/>
         <TextView android:id="@+id/counter_remaining_label"
                   android:text="@string/remaining"
                   style="@style/CounterPaneLabelTextView"/>
-        <FrameLayout android:layout_width="match_parent"
-                     android:background="@color/yellow"
-                     android:layout_height="match_parent"/>
     </LinearLayout>
+    <View
+            android:id="@+id/blank"
+            app:layout_constraintTop_toBottomOf="@+id/dashboard_counter_layout"
+            app:layout_constraintEnd_toEndOf="@id/dashboard_counter_layout"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/dashboard_active_bar_btm"
+            android:background="@color/yellow"
+            android:layout_height="0dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/dashboard_display_layout"
@@ -377,7 +384,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:gravity="center"
                 android:text="@string/system_check"
-                android:textColor="@color/bright"
+                android:textColor="@color/blue"
                 style="@style/DisplayTextView"/>
         <TextView
                 android:id="@+id/dashboard_display_2"
