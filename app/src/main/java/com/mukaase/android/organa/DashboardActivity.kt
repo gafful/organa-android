@@ -2,6 +2,7 @@ package com.mukaase.android.organa
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.content_main.*
@@ -37,16 +38,36 @@ class DashboardActivity : AppCompatActivity() {
 //        dashboard_display_layout.children.iterator().
 
         counter_remaining_label.isSelected = true
+        counter_cleaned_label.isSelected = true
+        counter_duration_label.isSelected = true
         dashboard_src_panel_name.isSelected = true
         dashboard_src_panel_path.isSelected = true
         dashboard_dest_panel_name.isSelected = true
         dashboard_dest_panel_path.isSelected = true
-        dashboard_display_1.isSelected = true
-        dashboard_display_2.isSelected = true
-        dashboard_display_3.isSelected = true
-        dashboard_display_4.isSelected = true
-        dashboard_display_5.isSelected = true
-        dashboard_display_6.isSelected = true
+
+//        // marquee
+//        dashboard_display_1.isSelected = true
+//        dashboard_display_2.isSelected = true
+//        dashboard_display_3.isSelected = true
+//        dashboard_display_4.isSelected = true
+//        dashboard_display_5.isSelected = true
+////        dashboard_display_6.isSelected = true
+
+
+//        dashboard_display_2.text = "TITLE: KPO"
+//        dashboard_display_3.text = "ALBULM: KPAY"
+//        dashboard_display_4.text = "AUTHOR: KPA"
+//        dashboard_display_5.text = "STATUS: MATCH | SKIPPED"
+//        dashboard_display_6.text = true
+
+//        // Error
+//        dashboard_display_1.text = "ALERT!!!"
+//        dashboard_display_2.text = ""
+//        dashboard_display_3.text = "DESTINATION FULL"
+//        dashboard_display_4.text = ""
+//        dashboard_display_5.text = ""
+
+        // Notice
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -80,6 +101,7 @@ class DashboardActivity : AppCompatActivity() {
 //                runGears()
                 println("wee dunn!!!")
                 runGears()
+                updateDisplayInfo()
             },
             onCancel = {
 //                playButton.isActivated = false
@@ -93,6 +115,37 @@ class DashboardActivity : AppCompatActivity() {
         dashboard_power_switch.setMinAndMaxFrame(35, 47)
 
         dashboard_power_switch.playAnimation()
+    }
+
+    private fun updateDisplayInfo() {
+        // Progress
+        dashboard_display_1.apply {
+            text = "[SCANNING]: AUD-WA0001231238.mp3"
+            gravity = Gravity.START
+            setTextColor(resources.getColor(R.color.bright_2))
+        }
+        dashboard_display_2.apply {
+            text = "TITLE: KPO"
+            gravity = Gravity.START
+            setTextColor(resources.getColor(R.color.orange))
+        }
+        dashboard_display_3.apply {
+            text = "ALBULM: KPAY"
+            gravity = Gravity.START
+            textSize = 14f
+            setTextColor(resources.getColor(R.color.orange))
+        }
+        dashboard_display_4.apply {
+            text = "AUTHOR: KPA"
+            gravity = Gravity.START
+            setTextColor(resources.getColor(R.color.orange))
+        }
+        dashboard_display_5.apply {
+            text = "STATUS: MATCH | SKIPPED"
+            gravity = Gravity.START
+            // IF match, green, else, ...
+            setTextColor(resources.getColor(R.color.orange))
+        }
     }
 
     private fun runGears() {
@@ -130,6 +183,27 @@ class DashboardActivity : AppCompatActivity() {
                 dashboard_power_switch.setMinAndMaxFrame(1, 11)
                 dashboard_power_switch.frame = 1
                 dashboard_power_switch.playAnimation()
+
+                // End
+                dashboard_display_1.apply {
+                    text = "SCAN COMPLETED"
+                    gravity = Gravity.CENTER
+                    // IF match, green, else, ...
+                    setTextColor(resources.getColor(R.color.bright_2))
+                }
+//                dashboard_display_2.text = "DURATION: 10:45sec"
+                dashboard_display_2.apply {
+                    text = "DURATION: 10:45sec"
+                    gravity = Gravity.CENTER
+                }
+                dashboard_display_3.text = ""
+//                dashboard_display_4.text =
+                dashboard_display_4.apply {
+                    text = "CHECK DESTINATION FOLDER"
+                    gravity = Gravity.CENTER
+//                    textSize = 16f
+                }
+                dashboard_display_5.text = ""
             }
         }
     }

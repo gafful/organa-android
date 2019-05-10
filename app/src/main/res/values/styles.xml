@@ -16,9 +16,11 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
     <style name="PanelTextView" parent="TextAppearance.AppCompat">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:padding">2dp</item>
         <item name="android:textColor">@color/tint_1</item>
         <item name="android:fontFamily">@font/orbitron</item>
 
@@ -31,14 +33,20 @@
         <item name="android:singleLine">true</item>
     </style>
     <style name="PanelLabelTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">12sp</item>
         <item name="android:paddingEnd">5dp</item>
         <item name="android:paddingStart">5dp</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
     <style name="PanelButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/tint_1</item>
-        <item name="android:background">@color/button</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_1</item>
         <item name="android:layout_margin">3dp</item>
     </style>
     <style name="PanelSquare">
@@ -54,8 +62,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/yellow</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/orbitron</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_weight">1</item>
     </style>
     <style name="CounterPaneLabelTextView">
         <item name="android:layout_width">match_parent</item>
@@ -76,8 +86,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/orbitron</item>
-        <!--<item name="android:textColor">@color/bright_2</item>-->
-        <!--<item name="android:textSize">12sp</item>-->
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:paddingEnd">2sp</item>
+        <item name="android:paddingStart">2sp</item>
+        <!--<item name="android:textColor">@color/orange</item>-->
     </style>
     <style name="StatsVerticalDivider">
         <item name="android:layout_width">match_parent</item>
@@ -93,5 +106,18 @@
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:scrollHorizontally">true</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="DashboardBorder">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/bright</item>
+    </style>
+    <style name="DashboardBorderVertical">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@color/bright</item>
     </style>
 </resources>

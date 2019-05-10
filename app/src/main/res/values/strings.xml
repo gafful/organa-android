@@ -19,9 +19,12 @@
     <string name="display_monitor">DISPLAY MONITOR</string>
     <string name="system_check">SYSTEM CHECK</string>
     <string name="power_up_to_start">POWER UP TO START_</string>
-    <string name="btm_dashes">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</string>
-    <string name="mid_dashes">- - - - - - - - - - - - - - - - - - - - - - -</string>
+    <string name="btm_dashes">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</string>
+    <string name="mid_dashes">- - - - - - - - - - - - - - - - -</string>
     <string name="_0">0</string>
     <string name="set">SET</string>
     <string name="src_ok_dest_ok">SRC: OK || Dest: OK</string>
+    <string name="duration">DURATION</string>
+    <string name="_0_00">0.00</string>
+    <string name="engine">ENGINE</string>
 </resources>

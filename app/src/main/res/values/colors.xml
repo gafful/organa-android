@@ -8,10 +8,11 @@
     <color name="tint_1">#e6e9eb</color>
     <color name="blue">#194DFF</color>
     <color name="bright">#76F2FF</color>
-    <color name="button">#1c4a7c</color>
+    <color name="button">#21A4F5</color>
     <color name="bright_3">#153C79</color>
     <color name="bright_2">#49EC6F</color>
     <color name="yellow">#B4A20B</color>
+    <color name="orange">#DBFF5507</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="background">#041527</color>
     <color name="black_overlay">#66000000</color>
