@@ -21,7 +21,7 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:padding">2dp</item>
-        <item name="android:textColor">@color/tint_1</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">@font/orbitron</item>
 
         <!--Ellipsis-->
@@ -35,7 +35,7 @@
     <style name="PanelLabelTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/tint_1</item>
         <item name="android:textSize">12sp</item>
         <item name="android:paddingEnd">5dp</item>
         <item name="android:paddingStart">5dp</item>
@@ -59,10 +59,10 @@
     </style>
     <style name="CounterTextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/yellow</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">34sp</item>
         <item name="android:fontFamily">@font/orbitron</item>
         <item name="android:padding">2dp</item>
         <item name="android:layout_weight">1</item>
@@ -72,7 +72,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center|top</item>
         <item name="android:textColor">@color/bright</item>
-        <item name="android:textSize">12sp</item>
+        <!--<item name="android:textSize">12sp</item>-->
 
         <!--Ellipsis-->
         <item name="android:ellipsize">marquee</item>

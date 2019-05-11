@@ -88,6 +88,8 @@ class DashboardActivity : AppCompatActivity() {
 
     fun onSettingsClick(v: View){
         println("onSettingsClick")
+
+
     }
 
     fun onPowerSwitch(v: View){
