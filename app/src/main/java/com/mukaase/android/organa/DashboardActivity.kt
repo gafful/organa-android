@@ -39,6 +39,7 @@ class DashboardActivity : AppCompatActivity() {
 
         counter_remaining_label.isSelected = true
         counter_cleaned_label.isSelected = true
+        counter_skipped_label.isSelected = true
         counter_duration_label.isSelected = true
         dashboard_src_panel_name.isSelected = true
         dashboard_src_panel_path.isSelected = true
