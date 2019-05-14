@@ -3,6 +3,7 @@ package com.mukaase.android.organa
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Environment
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,117 +12,60 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.content_main.*
 
 class DashboardActivity : AppCompatActivity() {
-
-
     private lateinit var viewModel: DashboardViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        setSupportActionBar(toolbar)
-
         initViews()
 
         val vmFactory = InjectorUtils.provideConsoleViewModel(this)
         viewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
         viewModel.checkStoragePermissions(this)
 
+        viewModel.srcDirName.observe(this, Observer {
+            dashboard_src_panel_name.text = it
+        })
         viewModel.srcDirPath.observe(this, Observer {
             dashboard_src_panel_path.text = it
         })
 
+        // 49MB or 89 audio files
+        viewModel.srcDirSize.observe(this, Observer {
+            dashboard_src_panel_file_count.text = it
+        })
+
+        viewModel.destDirName.observe(this, Observer {
+            dashboard_dest_panel_name.text = it
+        })
         viewModel.destDirPath.observe(this, Observer {
             dashboard_dest_panel_path.text = it
         })
-
-//        viewModel.getUsers().observe(this, Observer<List<User>>{ users ->
-//            // update UI
-//        })
-
-        // Here, thisActivity is the current activity
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//            != PackageManager.PERMISSION_GRANTED) {
-//
-//            // Permission is not granted
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//            } else {
-//                // No explanation needed, we can request the permission.
-//                ActivityCompat.requestPermissions(this,
-//                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-//                    REQUEST_CODE_WRITE_EXT_STORAGE)
-//
-//                // REQUEST_CODE_WRITE_EXT_STORAGE is an
-//                // app-defined int constant. The callback method gets the
-//                // result of the request.
-//            }
-//        } else {
-//            // Permission has already been granted
-//            // Extra check for isReadable ...
-//            println("Permission already granted")
-//            val ok = File("/storage/6362-6134/01awaz").mkdir()
-//            println("root-ok1: ${ok}")
-//            val ok1 = File("/storage/emulated/1/01awaz").mkdir()
-//            println("root-ok11: ${ok1}")
-//        }
-
-
-
-
-//        val drawable = BitmapDrawable(resources, dashboard_active_bar_btm.drawable.toBitmap())
-//        drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-//        mRelativeLayout.setBackground(drawable);
-
-
-//        window.setFlags(
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//            WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
-//        // Start Up
-//        dashboard_display_1.text = resources.getString(R.string.system_check)
-//        dashboard_display_1.setTextColor(resources.getColor(R.color.bright))
-//        dashboard_display_1.gravity = Gravity.CENTER
-//        dashboard_display_2.visibility = View.GONE
-//        dashboard_display_3.visibility = View.GONE
-//        dashboard_display_4.visibility = View.GONE
-//        dashboard_display_5.visibility = View.GONE
-//        dashboard_display_6.visibility = View.GONE
+        viewModel.destDirAvSpace.observe(this, Observer {
+            dashboard_dest_panel_file_count.text = it
+        })
 
 //        dashboard_display_layout.children.iterator().
 
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            val params = TextViewCompat.getTextMetricsParams(textView)
+//            val precomputedText = withContext(Dispatchers.Default) {
+//                PrecomputedTextCompat.create(longTextContent, params)
+//            }
+//            TextViewCompat.setPrecomputedText(textView, precomputedText)
+//        }
 
+    }
 
-//        // marquee
-//        dashboard_display_1.isSelected = true
-//        dashboard_display_2.isSelected = true
-//        dashboard_display_3.isSelected = true
-//        dashboard_display_4.isSelected = true
-//        dashboard_display_5.isSelected = true
-////        dashboard_display_6.isSelected = true
-
-
-//        dashboard_display_2.text = "TITLE: KPO"
-//        dashboard_display_3.text = "ALBULM: KPAY"
-//        dashboard_display_4.text = "AUTHOR: KPA"
-//        dashboard_display_5.text = "STATUS: MATCH | SKIPPED"
-//        dashboard_display_6.text = true
-
-//        // Error
-//        dashboard_display_1.text = "ALERT!!!"
-//        dashboard_display_2.text = ""
-//        dashboard_display_3.text = "DESTINATION FULL"
-//        dashboard_display_4.text = ""
-//        dashboard_display_5.text = ""
-
-        // Notice
+    override fun onDestroy() {
+        println("onDestroy")
+        super.onDestroy()
     }
 
     private fun initViews() {
         println("initViews")
+
+        //TODO: Do within a coroutine
         dashboard_power_switch.frame = 35
 
         counter_remaining_label.isSelected = true
@@ -129,86 +73,28 @@ class DashboardActivity : AppCompatActivity() {
         counter_skipped_label.isSelected = true
         counter_duration_label.isSelected = true
         dashboard_src_panel_name.isSelected = true
-        dashboard_src_panel_path.isSelected = true
+//        dashboard_src_panel_path.isSelected = true
         dashboard_dest_panel_name.isSelected = true
-        dashboard_dest_panel_path.isSelected = true
+//        dashboard_dest_panel_path.isSelected = true
+
+        println("wan2: ${Environment.getExternalStorageDirectory()}")
+        println("wan: ${getExternalFilesDirs(null)}")
+        println("two: ${filesDir}")
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         viewModel.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        when (requestCode) {
-//            DashboardViewModel.REQUEST_CODE_WRITE_EXT_STORAGE -> {
-//                // If request is cancelled, the result arrays are empty.
-//                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-//                    val ok = File(Environment.getExternalStorageDirectory().path + "/0awaz").mkdir()
-//                    println("root-ok2: ${ok}")
-//                } else {
-//                    // permission denied, boo! Disable the
-//                    // functionality that depends on this permission.
-//                }
-//                return
-//            }
-//            else -> {
-//                // Ignore all other requests.
-//            }
-//        }
-    }
-
-
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.menu_main, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        return when(item.itemId) {
-//            R.id.action_settings -> true
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
-
-    fun onSourceDirBtnClick(v: View) {
-        println("onSourceDirBtnClick")
-        viewModel.openSourceDirectory(this)
-
-//        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
-//            // Filter to only show results that can be "opened", such as a
-//            // file (as opposed to a list of contacts or timezones)
-////            addCategory(Intent.CATEGORY_OPENABLE)
-//            putExtra("android.content.extra.SHOW_ADVANCED", true)
-//
-//            // Filter to show only images, using the image MIME data type.
-//            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-//            // To search for all documents available via installed storage providers,
-//            // it would be "*/*".
-////            type = "audio/*"
-//        }
-//
-//        startActivityForResult(intent, REQUEST_CODE_CHOOSE_SOURCE_DIR)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
         viewModel.onActivityResult(requestCode, resultCode, resultData)
-//        if (requestCode == REQUEST_CODE_CHOOSE_SOURCE_DIR && resultCode == Activity.RESULT_OK) {
-//            resultData?.data?.also { uri ->
-//                println("Uri: $uri")
-//                //content://com.android.externalstorage.documents/document/6362-6134%3ADeitrick%20Haddon-Church%20on%20the%20moon%2FFolder.jpg
-//                println("Uri pat: ${FileExt.resolvePath(uri)}")
-//                File("${FileExt.resolvePath(uri) + "/hopeaf"}")
-////                Files.createDirectory(Path())
-//            }
-//        }
     }
 
+    fun onSourceDirBtnClick(v: View) {
+        println("onSourceDirBtnClick")
+        viewModel.openSourceDirectory(this)
+    }
 
     fun onDestDirBtnClick(v: View) {
         println("onDestDirBtnClick")
@@ -337,9 +223,19 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-//    private fun stopGears(b: Boolean) {
-//        dashboard_gears.cancelAnimation()
-//    }
+    private fun things(){
+        //        dashboard_display_2.text = "TITLE: KPO"
+//        dashboard_display_3.text = "ALBULM: KPAY"
+//        dashboard_display_4.text = "AUTHOR: KPA"
+//        dashboard_display_5.text = "STATUS: MATCH | SKIPPED"
+//        dashboard_display_6.text = true
 
+//        // Error
+//        dashboard_display_1.text = "ALERT!!!"
+//        dashboard_display_2.text = ""
+//        dashboard_display_3.text = "DESTINATION FULL"
+//        dashboard_display_4.text = ""
+//        dashboard_display_5.text = ""
 
+    }
 }

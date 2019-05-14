@@ -1,5 +1,6 @@
 package com.mukaase.android.organa
 
+//import javax.sound.midi.ShortMessage.CONTINUE
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -7,7 +8,6 @@ import android.os.Environment
 import android.os.Parcelable
 import android.text.TextUtils
 import android.util.Log
-//import com.mukaase.android.organa.FileExt.Companion.SD_CARD
 import java.io.File
 import java.text.DecimalFormat
 
@@ -19,7 +19,7 @@ import java.text.DecimalFormat
  * @version
  * @since , 22/09/2017
  */
-object FileExt {
+object FileUtils {
     //        println("1: ${filesDir}")// /data/user/0/com.mukaase.android.organa/files
 //        println("2: ${getExternalFilesDir(Environment.DIRECTORY_PICTURES)}")// /storage/emulated/0/Android/data/com.mukaase.android.organa/files/Pictures
 //    println("3: ${Environment.getExternalStorageDirectory()}")// /storage/emulated/0
@@ -49,6 +49,35 @@ object FileExt {
         return Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state
     }
 
+//    //
+//    // https://stackoverflow.com/questions/2149785/get-size-of-folder-or-file/19877372#19877372
+//    fun sizeOfDirectory(): Long {
+//        val folder = Paths.get("src/test/resources")
+//        val size = Files.walk(folder)
+//            .filter({ p -> p.toFile().isFile() })
+//            .mapToLong({ p -> p.toFile().length() })
+//            .sum()
+//
+//        return size
+//    }
+
+    fun getFolderSize(folder: File): Long {
+        var length: Long = 0
+        val files = folder.listFiles()
+
+        val count = files.size
+
+        for (i in 0 until count) {
+            if (files[i].isFile) {
+                length += files[i].length()
+            } else {
+                length += getFolderSize(files[i])
+            }
+        }
+        return length
+    }
+
+
     fun getAlbumStorageDir(albumName: String): File {
         // Get the directory for the user's public pictures directory.
         val file = File(
@@ -57,7 +86,7 @@ object FileExt {
             ), albumName
         )
         if (!file.mkdirs()) {
-            Log.e("FileExt", "Directory not created")
+            Log.e("FileUtils", "Directory not created")
         }
         return file
     }
@@ -66,9 +95,9 @@ object FileExt {
         // Get the directory for the user's public pictures directory.
         val file = File(ctx.getExternalFilesDir(Environment.DIRECTORY_MUSIC), albumName)
         if (!file.mkdirs()) {
-            Log.e("FileExt", "Directory not created")
+            Log.e("FileUtils", "Directory not created")
         }
-        Log.i("FileExt", "Directory created" + file)
+        Log.i("FileUtils", "Directory created" + file)
         return file
     }
 
@@ -76,9 +105,9 @@ object FileExt {
         // Get the directory for the user's public pictures directory.
         val file = File(ctx.getExternalFilesDir(null), albumName)
         if (!file.mkdirs()) {
-            Log.e("FileExt", "Directory not created")
+            Log.e("FileUtils", "Directory not created")
         }
-        Log.i("FileExt", "Directory created" + file)
+        Log.i("FileUtils", "Directory created" + file)
         return file
     }
 
@@ -162,9 +191,9 @@ object FileExt {
                 // sdcard1/GodDey/music
                 // 0/WhatsApp/Media/WhatsApp Audio
                 path = if ("primary:" in uri.pathSegments[1]) {
-                    "${locations[FileExt.SD_CARD]}/${uri.pathSegments[1].removePrefix("primary:")}"
+                    "${locations[FileUtils.SD_CARD]}/${uri.pathSegments[1].removePrefix("primary:")}"
                 } else {
-                    "${locations[FileExt.EXTERNAL_SD_CARD]}/${uri.pathSegments[1].split(":")[1]}"
+                    "${locations[FileUtils.EXTERNAL_SD_CARD]}/${uri.pathSegments[1].split(":")[1]}"
                 }
             }
             else -> {
@@ -192,7 +221,132 @@ object FileExt {
 //        return ("audio/mpeg" == intent?.type) && (intent.action == Intent.ACTION_SEND_MULTIPLE)
 //    }
 
+    // To get a location on external storage unique for your app
+    //Environment#DIRECTORY_MUSIC}
+//    fun appDirectory(context: DashboardActivity) = context.getExternalFilesDirs()
+
+    // To find locations on internal storage for your app
+    // Your app's files but goes with uninstalls
+    // If external, will go with uninstall if using getExternalFilesDir().
+    // Internals dont' require permissions
+    fun internalStorage(context: Context) = context.filesDir
+
+    fun externalStorage() = Environment.getExternalStorageDirectory()
+    fun externalStorage1(context: Context) = Environment.getExternalStorageDirectory()
+
+
+//    fun internalStorage(context: DashboardActivity) = context.getExternalFilesDirs()
+
+    /* Checks if external storage is available for read and write */
+    fun isExternalStorageWritable4(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    /* Checks if external storage is available to at least read */
+    fun isExternalStorageReadable2(): Boolean {
+        return Environment.getExternalStorageState() in
+                setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)
+    }
+
+
+    fun whatsAppAudioDir() = File(externalStorage().path + "/WhatsApp/Media/WhatsApp Audio")
+
+//    fun wazap(ctx: Activity): Boolean {
+//        return File(externalStorage().path + "/WhatsApp/Media/WhatsApp Audio").canRead()
+//    }
+
+    fun getPublicAlbumStorageDir(albumName: String): File? {
+        // Get the directory for the user's public pictures directory.
+        val file = File(
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES
+            ), albumName
+        )
+        if (!file.mkdirs()) {
+//            Log.e(LOG_TAG, "Directory not created")
+            println("Directory not created")
+        }
+        return file
+    }
+
+    //    fun publicMusicDir(context: Context) = context.getExternalFilesDir(DIRECTORY_MUSIC)
+    fun publicMusicDir() = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
+
+    // https://www.baeldung.com/java-folder-size
+    fun folderSize(directory: File): Long {
+        var length: Long = 0
+        for (file in directory.listFiles()) {
+            if (file.isFile)
+                length += file.length()
+            else
+                length += folderSize(file)
+        }
+        return length
+    }
+
+    fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
+        val file = File(path)
+        return file.listFiles()
+            .filter { showHiddenFiles || !it.name.startsWith(".") }
+            .filter { !onlyFolders || it.isDirectory }
+            .toList()
+    }
+
+//    fun getFileModelsFromFiles(files: List<File>): List<FileModel> {
+//        return files.map {
+//            FileModel(it.path, FileType.getFileType(it), it.name, convertFileSizeToMB(it.length()), it.extension, it.listFiles()?.size
+//                ?: 0)
+//        }
+//    }
+
+    fun convertFileSizeToMB(sizeInBytes: Long): Double {
+        return (sizeInBytes.toDouble()) / (1024 * 1024)
+    }
+
+//    /**
+//     * Attempts to calculate the size of a file or directory.
+//     *
+//     *
+//     *
+//     * Since the operation is non-atomic, the returned value may be inaccurate.
+//     * However, this method is quick and does its best.
+//     * https://stackoverflow.com/questions/2149785/get-size-of-folder-or-file/19877372#19877372
+//     * API 26
+//     */
+//    fun size(path: Path): Long {
+//
+//        val size = AtomicLong(0)
+//
+//        try {
+//            Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
+//                fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+//
+//                    size.addAndGet(attrs.size())
+//                    return FileVisitResult.CONTINUE
+//                }
+//
+//                fun visitFileFailed(file: Path, exc: IOException): FileVisitResult {
+//
+//                    println("skipped: $file ($exc)")
+//                    // Skip folders that can't be traversed
+//                    return FileVisitResult.CONTINUE
+//                }
+//
+//                fun postVisitDirectory(dir: Path, exc: IOException?): FileVisitResult {
+//
+//                    if (exc != null)
+//                        println("had trouble traversing: $dir ($exc)")
+//                    // Ignore errors traversing a folder
+//                    return FileVisitResult.CONTINUE
+//                }
+//            })
+//        } catch (e: IOException) {
+//            throw AssertionError("walkFileTree will not throw IOException if the FileVisitor does not")
+//        }
+//        return size.get()
+//    }
+
     val EXTERNAL_SD_CARD = "externalSdCard"
     val SD_CARD = "sdCard"
-    val TAG = "FileExt"
+    val TAG = "FileUtils"
 }

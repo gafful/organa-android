@@ -12,19 +12,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.obsez.android.lib.filechooser.ChooserDialog
 import java.io.File
+//import kotlin.coroutines.CoroutineContext
 
 class DashboardViewModel : ViewModel() {
 
+    // A ViewModel must never reference a view, Lifecycle, or any class that may hold a reference to the activity context.
+    // However ViewModel objects must never observe changes to lifecycle-aware observables, such as LiveData objects.
     private val REQUEST_CODE_CHOOSE_SOURCE_DIR = 2
 
     // Default: WhatsApp Audio
     // else: Root
+    var srcDirName: MutableLiveData<String> = MutableLiveData()
     var srcDirPath: MutableLiveData<String> = MutableLiveData()
+    var srcDirSize: MutableLiveData<String> = MutableLiveData()
+    var destDirName: MutableLiveData<String> = MutableLiveData()
     var destDirPath: MutableLiveData<String> = MutableLiveData()
+    var destDirAvSpace: MutableLiveData<String> = MutableLiveData()
 //
 //    init {
 //        val whatsAppAudioDir = File("${Constants.WHATSAPP_DIR}")
-//        val srcPath = if (whatsAppAudioDir.exists()) whatsAppAudioDir.path else Utils.externalStorage().path
+//        val srcPath = if (whatsAppAudioDir.exists()) whatsAppAudioDir.path else FileUtils.externalStorage().path
 //        srcDirectoryPath.value = srcPath
 //    }
 
@@ -58,21 +65,25 @@ class DashboardViewModel : ViewModel() {
         } else {
             // Permission has already been granted
             // Extra check for isReadable ...
-            initSourceAndDestDirectories(ctx)
+            initSourceAndDestDirectories()
         }
     }
 
-    private fun initSourceAndDestDirectories(ctx: Activity) {
+    private fun initSourceAndDestDirectories() {
         println("initSourceAndDestDirectories")
         // Source
         // If WA directory exists, use, else, root
-        if (Utils.whatsAppAudioDir().canRead()){
-            srcDirPath.value = Utils.whatsAppAudioDir().path
+        if (FileUtils.whatsAppAudioDir().canRead()){
+            srcDirName.value = FileUtils.whatsAppAudioDir().name
+            srcDirPath.value = FileUtils.whatsAppAudioDir().path
+            srcDirSize.value = FileUtils.getFolderSize(FileUtils.whatsAppAudioDir()).toString()
         }
 
         // Dest
-        if (Utils.publicMusicDir().canWrite()){
-            destDirPath.value = Utils.publicMusicDir().path
+        if (FileUtils.publicMusicDir().canWrite()){
+            destDirName.value = FileUtils.publicMusicDir().name
+            destDirPath.value = FileUtils.publicMusicDir().path
+            destDirAvSpace.value = FileUtils.readableFileSize(FileUtils.publicMusicDir().freeSpace)
         }
     }
 
@@ -82,7 +93,7 @@ class DashboardViewModel : ViewModel() {
         // Check if readable
         ChooserDialog(context)
             .withFilter(true, false)
-            .withStartFile(Utils.externalStorage().path)
+            .withStartFile(FileUtils.externalStorage().path)
 //            .withStartFile(Utils.externalStorage(context).path + Constants.WHATSAPP_DIR)
             .withResources(R.string.title_choose_folder, R.string.title_choose, R.string.dialog_cancel)
             .withChosenListener { path, pathFile ->
@@ -94,10 +105,25 @@ class DashboardViewModel : ViewModel() {
                 ////_iv.setImageURI(Uri.fromFile(pathFile));
                 //_iv.setImageBitmap(ImageUtil.decodeFile(pathFile))
             }
-//            .withNavigateUpTo { true }
-//            .withNavigateTo { true }
+            .withNavigateUpTo { true }
+            .withNavigateTo { true }
             .build()
             .show()
+
+        //        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+//            // Filter to only show results that can be "opened", such as a
+//            // file (as opposed to a list of contacts or timezones)
+////            addCategory(Intent.CATEGORY_OPENABLE)
+//            putExtra("android.content.extra.SHOW_ADVANCED", true)
+//
+//            // Filter to show only images, using the image MIME data type.
+//            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+//            // To search for all documents available via installed storage providers,
+//            // it would be "*/*".
+////            type = "audio/*"
+//        }
+//
+//        startActivityForResult(intent, REQUEST_CODE_CHOOSE_SOURCE_DIR)
     }
 
     @SuppressLint("PrivateResource")
@@ -105,7 +131,7 @@ class DashboardViewModel : ViewModel() {
         println("openDestDirectory")
         ChooserDialog(context)
             .withFilter(true, false)
-            .withStartFile(Utils.publicMusicDir().path)
+            .withStartFile(FileUtils.publicMusicDir().path)
             .withResources(R.string.title_choose_folder, R.string.title_choose, R.string.dialog_cancel)
             .withChosenListener { path, pathFile ->
 //                Toast.makeText(context, "FILE: $path; PATHFILE: $pathFile", Toast.LENGTH_SHORT).show()
@@ -119,6 +145,16 @@ class DashboardViewModel : ViewModel() {
 
     fun start() {
         println("start")
+        // start with coroutine
+        // when clearing and task not done, defer to WorkManager
+        // Coroutines are useful here for when you have work that needs to be done only if the ViewModel is active.
+
+//        ViewModel.viewModelScope.launch {
+            // Walk through source
+            // Get title, author & album
+            // Get match and copy there and delete
+            // Create by author, copy and delete
+//        }
     }
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -147,11 +183,16 @@ class DashboardViewModel : ViewModel() {
             resultData?.data?.also { uri ->
                 println("Uri: $uri")
                 //content://com.android.externalstorage.documents/document/6362-6134%3ADeitrick%20Haddon-Church%20on%20the%20moon%2FFolder.jpg
-                println("Uri pat: ${FileExt.resolvePath(uri)}")
-                File("${FileExt.resolvePath(uri) + "/hopeaf"}")
+                println("Uri pat: ${FileUtils.resolvePath(uri)}")
+                File("${FileUtils.resolvePath(uri) + "/hopeaf"}")
 //                Files.createDirectory(Path())
             }
         }
+    }
+
+    override fun onCleared() {
+        println("onCleared")
+        super.onCleared()
     }
 
     companion object {
