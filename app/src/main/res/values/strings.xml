@@ -27,4 +27,5 @@
     <string name="duration">DURATION</string>
     <string name="_0_00">0.00</string>
     <string name="engine">ENGINE</string>
+    <string name="title_choose_folder">CHOOSE FOLDER</string>
 </resources>

@@ -61,6 +61,7 @@
                 android:drawableEnd="@drawable/play_up"
                 style="@style/PanelButton"
                 android:paddingEnd="8dp"
+                android:onClick="onSourceDirBtnClick"
                 android:drawablePadding="15dp"
                 android:paddingStart="1dp"
                 android:text="@string/source"/>
@@ -112,6 +113,7 @@
                 android:id="@+id/dashboard_dest_btn"
                 style="@style/PanelButton"
                 android:paddingStart="8dp"
+                android:onClick="onDestDirBtnClick"
                 android:paddingEnd="0dp"
                 android:drawableStart="@drawable/play_down"
                 android:text="@string/destination"/>
