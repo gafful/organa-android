@@ -37,8 +37,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
     implementation "com.airbnb.android:lottie:$lottie"
     implementation "com.obsez.android.lib.filechooser:filechooser:$androidFileChooser"
-    implementation 'org.jaudiotagger:jaudiotagger:2.2.3'
+    implementation 'org.jaudiotagger:jaudiotagger:2.0.1'//2.2.3
+//    implementation 'net.jthink:jaudiotagger:2.2.3'//2.2.3
     implementation 'me.xdrop:fuzzywuzzy:1.1.7'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'

@@ -202,7 +202,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/guide_dashboard_vert"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.2"/>
+            app:layout_constraintGuide_percent="0.23"/>
 
     <View android:id="@+id/dashboard_border_3_1_1"
           style="@style/DashboardBorderVertical"
@@ -368,7 +368,7 @@
         <View style="@style/StatsVerticalDivider"/>
         <TextView android:id="@+id/counter_remaining"
                   style="@style/CounterTextView"
-                  android:text="@string/_0"/>
+                  android:text="999"/>
         <TextView android:id="@+id/counter_remaining_label"
                   android:text="@string/remaining"
                   style="@style/CounterPaneLabelTextView"/>
@@ -376,7 +376,7 @@
         <TextView android:id="@+id/counter_duration"
                   style="@style/CounterTextView"
                   android:textSize="22sp"
-                  android:text="@string/_0_00"/>
+                  android:text="00:00\n00"/>
         <TextView android:id="@+id/counter_duration_label"
                   android:text="@string/duration"
                   style="@style/CounterPaneLabelTextView"/>

@@ -18,10 +18,26 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
-
         val vmFactory = InjectorUtils.provideConsoleViewModel(this)
         viewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
+        initObservers()
         viewModel.checkStoragePermissions(this)
+
+
+//        dashboard_display_layout.children.iterator().
+
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            val params = TextViewCompat.getTextMetricsParams(textView)
+//            val precomputedText = withContext(Dispatchers.Default) {
+//                PrecomputedTextCompat.create(longTextContent, params)
+//            }
+//            TextViewCompat.setPrecomputedText(textView, precomputedText)
+//        }
+
+    }
+
+    private fun initObservers() {
+        println("initObservers")
 
         viewModel.srcDirName.observe(this, Observer {
             dashboard_src_panel_name.text = it
@@ -45,16 +61,16 @@ class DashboardActivity : AppCompatActivity() {
             dashboard_dest_panel_file_count.text = it
         })
 
-//        dashboard_display_layout.children.iterator().
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            val params = TextViewCompat.getTextMetricsParams(textView)
-//            val precomputedText = withContext(Dispatchers.Default) {
-//                PrecomputedTextCompat.create(longTextContent, params)
-//            }
-//            TextViewCompat.setPrecomputedText(textView, precomputedText)
-//        }
-
+        viewModel.engineStats.observe(this, Observer {
+            counter_cleaned.text = it.cleaned.toString()
+            counter_skipped.text = it.skipped.toString()
+            counter_mp3.text = it.progress.toString()
+            counter_remaining.text = it.progress.toString()
+        })
+        viewModel.timeElapsed.observe(this, Observer {
+            counter_duration.text = it
+        })
     }
 
     override fun onDestroy() {
@@ -78,8 +94,13 @@ class DashboardActivity : AppCompatActivity() {
 //        dashboard_dest_panel_path.isSelected = true
 
         println("wan2: ${Environment.getExternalStorageDirectory()}")
-        println("wan: ${getExternalFilesDirs(null)}")
+        getExternalFilesDirs(null).forEach({
+            println("it: $it")
+        })
         println("two: ${filesDir}")
+//        2019-05-15 20:54:20.108 14345-14345/com.mukaase.android.organa I/System.out: wan2: /storage/emulated/0
+//        2019-05-15 20:54:20.114 14345-14345/com.mukaase.android.organa I/System.out: wan: [Ljava.io.File;@90b0e5
+//        2019-05-15 20:54:20.114 14345-14345/com.mukaase.android.organa I/System.out: two: /data/user/0/com.mukaase.android.organa/files
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -111,7 +132,7 @@ class DashboardActivity : AppCompatActivity() {
 //                updateRenderTimesPerLayer()
 //                runGears()
                 println("wee dunn!!!")
-                viewModel.start()
+                viewModel.start(this)
                 runGears()
                 updateDisplayInfo()
             },
@@ -223,7 +244,7 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun things(){
+    private fun things() {
         //        dashboard_display_2.text = "TITLE: KPO"
 //        dashboard_display_3.text = "ALBULM: KPAY"
 //        dashboard_display_4.text = "AUTHOR: KPA"

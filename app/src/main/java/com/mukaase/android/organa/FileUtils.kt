@@ -6,10 +6,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.os.Parcelable
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
+import androidx.annotation.WorkerThread
 import java.io.File
 import java.text.DecimalFormat
+
+
 
 
 /**
@@ -49,17 +54,6 @@ object FileUtils {
         return Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state
     }
 
-//    //
-//    // https://stackoverflow.com/questions/2149785/get-size-of-folder-or-file/19877372#19877372
-//    fun sizeOfDirectory(): Long {
-//        val folder = Paths.get("src/test/resources")
-//        val size = Files.walk(folder)
-//            .filter({ p -> p.toFile().isFile() })
-//            .mapToLong({ p -> p.toFile().length() })
-//            .sum()
-//
-//        return size
-//    }
 
     fun getFolderSize(folder: File): Long {
         var length: Long = 0
@@ -68,10 +62,10 @@ object FileUtils {
         val count = files.size
 
         for (i in 0 until count) {
-            if (files[i].isFile) {
-                length += files[i].length()
+            length += if (files[i].isFile) {
+                files[i].length()
             } else {
-                length += getFolderSize(files[i])
+                getFolderSize(files[i])
             }
         }
         return length
@@ -88,16 +82,6 @@ object FileUtils {
         if (!file.mkdirs()) {
             Log.e("FileUtils", "Directory not created")
         }
-        return file
-    }
-
-    fun getAlbumStorageDir2(ctx: Context, albumName: String): File {
-        // Get the directory for the user's public pictures directory.
-        val file = File(ctx.getExternalFilesDir(Environment.DIRECTORY_MUSIC), albumName)
-        if (!file.mkdirs()) {
-            Log.e("FileUtils", "Directory not created")
-        }
-        Log.i("FileUtils", "Directory created" + file)
         return file
     }
 
@@ -250,24 +234,11 @@ object FileUtils {
 
 
     fun whatsAppAudioDir() = File(externalStorage().path + "/WhatsApp/Media/WhatsApp Audio")
+    fun whatsAppAudioDirSize() = readableFileSize(folderSize(whatsAppAudioDir()))
 
 //    fun wazap(ctx: Activity): Boolean {
 //        return File(externalStorage().path + "/WhatsApp/Media/WhatsApp Audio").canRead()
 //    }
-
-    fun getPublicAlbumStorageDir(albumName: String): File? {
-        // Get the directory for the user's public pictures directory.
-        val file = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            ), albumName
-        )
-        if (!file.mkdirs()) {
-//            Log.e(LOG_TAG, "Directory not created")
-            println("Directory not created")
-        }
-        return file
-    }
 
     //    fun publicMusicDir(context: Context) = context.getExternalFilesDir(DIRECTORY_MUSIC)
     fun publicMusicDir() = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
@@ -282,6 +253,41 @@ object FileUtils {
                 length += folderSize(file)
         }
         return length
+    }
+
+    // https://www.baeldung.com/java-folder-size
+    fun folderStats(directory: File): Long {
+        var length: Long = 0
+        for (file in directory.listFiles()) {
+            if (file.isFile)
+                length += file.length()
+            else
+                length += folderSize(file)
+        }
+        return length
+    }
+
+    @WorkerThread
+    suspend fun folderStats2(file: File) : Directory {
+        var audioCount = 0
+        var nonAudioCount = 0
+
+        file.walkTopDown().forEach {
+            println("ext is: ${it.extension}")
+            when (it.extension.toUpperCase()) {
+                "MP3" -> {
+                    audioCount += 1
+                }
+                "M4A" -> {
+                    audioCount += 1
+                }
+                else -> nonAudioCount += 1
+            }
+        }
+
+        println("countzz: $audioCount -- $nonAudioCount")
+//        source = Source(SOURCE_DIRECTORY, srcFile.name, srcFile.path, mp3, ukn)
+        return Directory(file.name, file.path, audioCount)
     }
 
     fun getFilesFromPath(path: String, showHiddenFiles: Boolean = false, onlyFolders: Boolean = false): List<File> {
@@ -345,6 +351,46 @@ object FileUtils {
 //        }
 //        return size.get()
 //    }
+
+//    //
+//    // https://stackoverflow.com/questions/2149785/get-size-of-folder-or-file/19877372#19877372
+//    fun sizeOfDirectory(): Long {
+//        val folder = Paths.get("src/test/resources")
+//        val size = Files.walk(folder)
+//            .filter({ p -> p.toFile().isFile() })
+//            .mapToLong({ p -> p.toFile().length() })
+//            .sum()
+//
+//        return size
+//    }
+
+    //https://stackoverflow.com/questions/13209494/how-to-get-the-full-file-path-from-uri
+//    @SuppressLint("NewApi")
+    fun getRealPathFromURI_API19(context: Context, uri: Uri): String {
+        var filePath = ""
+        val wholeID = DocumentsContract.getDocumentId(uri)
+
+        // Split at colon, use second item in the array
+        val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+
+        val column = arrayOf(MediaStore.Images.Media.DATA)
+
+        // where id is equal to
+        val sel = MediaStore.Images.Media._ID + "=?"
+
+        val cursor = context.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            column, sel, arrayOf(id), null
+        )
+
+        val columnIndex = cursor!!.getColumnIndex(column[0])
+
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex)
+        }
+        cursor.close()
+        return filePath
+    }
 
     val EXTERNAL_SD_CARD = "externalSdCard"
     val SD_CARD = "sdCard"
