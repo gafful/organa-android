@@ -1,5 +1,6 @@
 package com.mukaase.android.organa
 
+//import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -41,18 +42,21 @@ class DashboardActivity : AppCompatActivity() {
 
         viewModel.srcDirName.observe(this, Observer {
             dashboard_src_panel_name.text = it
+            dashboard_display_1.text = getString(R.string.system_check)
+            dashboard_display_2.text = getString(R.string.src_ok)
         })
         viewModel.srcDirPath.observe(this, Observer {
             dashboard_src_panel_path.text = it
         })
-
         // 49MB or 89 audio files
-        viewModel.srcDirSize.observe(this, Observer {
-            dashboard_src_panel_file_count.text = it
+        viewModel.srcDirAudioFileCount.observe(this, Observer {
+            dashboard_src_panel_file_count.text = it.toString()
         })
 
         viewModel.destDirName.observe(this, Observer {
             dashboard_dest_panel_name.text = it
+            dashboard_display_3.text = getString(R.string.dest_ok)
+            dashboard_display_5.text = getString(R.string.power_up_to_start)
         })
         viewModel.destDirPath.observe(this, Observer {
             dashboard_dest_panel_path.text = it
@@ -66,8 +70,35 @@ class DashboardActivity : AppCompatActivity() {
             counter_cleaned.text = it.cleaned.toString()
             counter_skipped.text = it.skipped.toString()
             counter_mp3.text = it.progress.toString()
-            counter_remaining.text = it.progress.toString()
+            counter_remaining.text = getString(R.string.precision_1, it.progress, "%")
+
+            dashboard_display_1.text = getString(R.string.scanning_, it.audioMetadata.fileName)
+            dashboard_display_2.text = getString(R.string.title_, it.audioMetadata.title)
+            dashboard_display_3.text = getString(R.string.artist_, it.audioMetadata.artist)
+            dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
+            dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
+
+            println("monitoring the progress: ${it.progress}")
+
+            if (it.progress == 100.0f){
+                dashboard_gears.cancelAnimation()
+                dashboard_gears_outer.cancelAnimation()
+//                dashboard_progress_indicator.cancelAnimation()
+                dashboard_power_switch.removeAllAnimatorListeners()
+                dashboard_power_switch.setMinAndMaxFrame(1, 11)
+                dashboard_power_switch.frame = 1
+//                dashboard_power_switch.playAnimation()
+                counter_remaining.text = "100%"
+
+
+                dashboard_display_1.text = getString(R.string.scan_complete)
+                dashboard_display_2.text = formatHtmlString(R.string.title_, it.audioMetadata.title)
+                dashboard_display_3.text = getString(R.string.artist_, it.audioMetadata.artist)
+                dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
+                dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
+            }
         })
+
         viewModel.timeElapsed.observe(this, Observer {
             counter_duration.text = it
         })
@@ -134,7 +165,7 @@ class DashboardActivity : AppCompatActivity() {
                 println("wee dunn!!!")
                 viewModel.start(this)
                 runGears()
-                updateDisplayInfo()
+//                updateDisplayInfo()
             },
             onCancel = {
                 //                playButton.isActivated = false

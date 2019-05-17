@@ -18,9 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 import kotlin.system.measureTimeMillis
-
-//import kotlin.coroutines.CoroutineContext
 
 class DashboardViewModel(val engine: Engine) : ViewModel() {
 
@@ -33,13 +32,19 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     // else: Root
     var srcDirName: MutableLiveData<String> = MutableLiveData()
     var srcDirPath: MutableLiveData<String> = MutableLiveData()
-    var srcDirSize: MutableLiveData<String> = MutableLiveData()
+    var srcDirAudioFileCount: MutableLiveData<Int> = MutableLiveData()
     var srcDir: MutableLiveData<Directory> = MutableLiveData()
     var destDirName: MutableLiveData<String> = MutableLiveData()
     var destDirPath: MutableLiveData<String> = MutableLiveData()
     var destDirAvSpace: MutableLiveData<String> = MutableLiveData()
     var engineStats: MutableLiveData<EngineStats> = MutableLiveData()
     var timeElapsed: MutableLiveData<String> = MutableLiveData()
+    val d: Int by Delegates.observable(0,
+        { prop, old, new ->
+            if (new == 5){
+                println("fa ya-ya-ya-yahh $prop --- $old")
+            }
+    })
 
 
     // FIXME: Keep Android code out of the view model.
@@ -97,20 +102,19 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
         var nonAudioCount = 0
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                source.walkTopDown().forEach {
-                    println("ext is: ${it.extension}")
-                    when (it.extension.toUpperCase()) {
-                        "MP3" -> {
-                            audioCount += 1
-                        }
-                        "M4A" -> {
-                            audioCount += 1
-                        }
-                        else -> nonAudioCount += 1
+                source
+                    .walkTopDown()
+                    .filter { !it.isDirectory && !it.isHidden }
+                    .filter {
+                        it.extension.equals("mp3", true) or
+                                it.extension.equals("m4a", true) or
+                                it.extension.equals("wma", true)
                     }
-                }
+                    .forEach {
+                        println("ext is: ${it.extension}")
+                        srcDirAudioFileCount.postValue(audioCount)
+                    }
             }
-            srcDirSize.postValue(audioCount.toString())
         }
     }
 
@@ -122,24 +126,6 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
         destDirPath.value = destDir.path
         destDirAvSpace.value = FileUtils.readableFileSize(destDir.freeSpace)
     }
-
-//    private fun initSourceAndDestDirectories() {
-//        println("initSourceAndDestDirectories")
-//        // Source
-//        // If WA directory exists, use, else, root
-//        if (FileUtils.whatsAppAudioDir().canRead()) {
-//            srcDirName.value = FileUtils.whatsAppAudioDir().name
-//            srcDirPath.value = FileUtils.whatsAppAudioDir().path
-//            srcDirSize.value = FileUtils.whatsAppAudioDirSize()
-//        }
-//
-//        // Dest
-//        if (FileUtils.publicMusicDir().canWrite()) {
-//            destDirName.value = FileUtils.publicMusicDir().name
-//            destDirPath.value = FileUtils.publicMusicDir().path
-//            destDirAvSpace.value = FileUtils.readableFileSize(FileUtils.publicMusicDir().freeSpace)
-//        }
-//    }
 
     @SuppressLint("PrivateResource")
     fun openSourceDirectory(context: DashboardActivity) {
@@ -192,7 +178,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
             .show()
     }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
+    //    @RequiresApi(Build.VERSION_CODES.O)
     fun start(ctx: DashboardActivity) {
         println("start")
         // start with coroutine
@@ -208,16 +194,13 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 
         GlobalScope.launch {
             val time = measureTimeMillis {
-                withContext(Dispatchers.IO){
-//                    fixedRateTimer(name = "hello-timer",
-//                        initialDelay = 0, period = 100) {
-//                        println("hello world!")
-//                        timeElapsed.postValue(this.scheduledExecutionTime())
-//                    }
-                    val infos = engine.start(File((srcDirPath.value)), File(destDirPath.value))
-                    infos.forEachIndexed { index, metadata ->
-                        println("are we there: $metadata")
-                        engineStats.postValue(EngineStats(metadata, index, index, index.toFloat()))
+                withContext(Dispatchers.IO) {
+                    val infos =
+                        engine.start(srcDirAudioFileCount.value!!, File((srcDirPath.value)), File(destDirPath.value))
+                    infos.forEachIndexed { index, stats ->
+                        println("are we there: $stats")
+//                        engineStats.postValue(EngineStats(metadata, index, index, index.toFloat()))
+                        engineStats.postValue(stats)
                     }
                 }
             }
@@ -229,9 +212,10 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 //                TimeUnit.MILLISECONDS.toSeconds(millis) -
 //                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
 //            );
-            val formattedTime = "${TimeUnit.MILLISECONDS.toMillis(time)}\n" +
-                    "${TimeUnit.MILLISECONDS.toSeconds(time)}:" +
-                    "${TimeUnit.MILLISECONDS.toSeconds(time)}"
+            val formattedTime = "${TimeUnit.MILLISECONDS.toMinutes(time)}:" +
+                    "${TimeUnit.MILLISECONDS.toSeconds(time)}\n" +
+                    "${TimeUnit.MILLISECONDS.toMillis(time)}"
+            println(" formatttt: $formattedTime")
             timeElapsed.postValue(formattedTime)
         }
 
@@ -331,5 +315,4 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     companion object {
         internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
     }
-
 }

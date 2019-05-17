@@ -12,17 +12,15 @@ class Engine(private val tagger: Tagger) {
         println("Awwwwesoooomme---")
     }
 
-    suspend fun start(src: File, dest: File): Sequence<AudioMetadata> {
-        require(src.isDirectory) {"Source file must be a directory!"}
-        require(src.isDirectory) {"Destination file must be a directory!"}
-//        if (!src.isDirectory)
-//            throw IllegalStateException("Source file must be a directory!")
-//
-//        if (!dest.isDirectory)
-//            throw IllegalStateException("Destination file must be a directory!")
+    suspend fun start(audioCount: Int, src: File, dest: File): Sequence<EngineStats> {
+        require(src.isDirectory) { "Source file must be a directory!" }
+        require(src.isDirectory) { "Destination file must be a directory!" }
 
         srcFile = src
         destFile = dest
+        var skipped = 0
+        var cleaned = 0
+        var metadata: AudioMetadata
 
         return srcFile
             .walkTopDown()
@@ -31,12 +29,18 @@ class Engine(private val tagger: Tagger) {
                 it.extension.equals("mp3", true) or
                         it.extension.equals("m4a", true) or
                         it.extension.equals("wma", true)
-            }.map {
-                // TODO: Stop at 10,000
-                currentFile = it
-                tagger.metadata(it)
             }
-
+            .mapIndexed { index, file ->
+                // TODO: Stop at 10,000
+                currentFile = file
+                metadata = tagger.metadata(file)
+                if (tagger.skipped()) skipped += 1 else cleaned += 1
+                println("skippp: $skipped --- $cleaned --- ${index.toFloat()+1} --- $audioCount --- ${index.toFloat().div(audioCount)}")
+                EngineStats(metadata, cleaned, skipped, percent((index + 1), audioCount))
+            }
     }
 
+    private fun percent(nom: Int, denom: Int): Float {
+        return nom.toFloat().div(denom).times(100)
+    }
 }

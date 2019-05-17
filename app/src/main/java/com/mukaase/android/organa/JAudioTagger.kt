@@ -1,11 +1,11 @@
 package com.mukaase.android.organa
 
-import org.jaudiotagger.audio.*
+import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
 import org.jaudiotagger.tag.Tag
 import java.io.File
 
-class JAudioTagger(): Tagger {
+class JAudioTagger : Tagger {
 //    private val tag: org.jaudiotagger.tag.Tag
 //
 //    init {
@@ -13,19 +13,37 @@ class JAudioTagger(): Tagger {
 //        tag = audioFile.tag
 //    }
 
+    private var skipped = false
+
+    override fun skipped() = skipped
+
     override fun title(tag: Tag) = tag.getFirst(FieldKey.TITLE)
 
-    override fun artist(tag: Tag) = tag.getFirst(FieldKey.ARTIST)
+    override fun artist(tag: Tag) = tag.getFirst(FieldKey.ARTIST) // || tag.getFirst(FieldKey.ALBUM_ARTIST)
 
-    override fun album(tag: Tag) = tag.getFirst(FieldKey.ARTIST)
+    override fun album(tag: Tag) = tag.getFirst(FieldKey.ALBUM)
 
+    // read
     override fun metadata(file: File): AudioMetadata {
         println("neeext: $file")///storage/emulated/0/WhatsApp/Media/WhatsApp Audio/AUD-20190511-WA0002.m4a
         // Unable to determine start of audio in file
-        val tag = AudioFileIO.read(file).tag ?: return AudioMetadata(file.name)
-        //        println("tag: $tag")
+        val tag: Tag
+        try {
+            tag = AudioFileIO.read(file).tag
+            if (null == tag) {
+                return skip(file)
+            }
+        } catch (e: Exception) {
+            return skip(file)
+        }
         return AudioMetadata(file.name, title(tag), artist(tag), album(tag))
     }
+
+    private fun skip(file: File): AudioMetadata {
+        skipped = true
+        return AudioMetadata(file.name)
+    }
+
 //    override fun metadata(file: File) = AudioMetadata(title(), artist())
 
 //    private fun getMetaData(file: File): AudioMeta? {

@@ -8,4 +8,5 @@ interface Tagger {
     fun artist(tag: Tag): String
     fun album(tag: Tag): String
     fun metadata(file: File): AudioMetadata
+    fun skipped(): Boolean
 }

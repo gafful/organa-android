@@ -23,10 +23,23 @@
     <string name="mid_dashes">- - - - - - - - - - - - - - - - -</string>
     <string name="_0">0</string>
     <string name="set">SET</string>
-    <string name="src_ok_dest_ok">SRC: OK || Dest: OK</string>
+    <string name="src_ok">SOURCE: OK</string>
+    <string name="dest_ok">DESTINATION: OK</string>
     <string name="duration">DURATION</string>
     <string name="_0_00">0.00</string>
     <string name="engine">ENGINE</string>
     <string name="choose_source_folder">CHOOSE SOURCE FOLDER</string>
     <string name="choose_dest_folder">CHOOSE DESTINATION FOLDER</string>
+    <string name="scanning_">SCANNING: %1$s</string>
+    <string name="title_"><b>TITLE: </b>%1$s</string>
+    <string name="album_">ALBUM: %1$s</string>
+    <string name="artist_">ARTIST: %1$s</string>
+    <string name="title_and_subtitle">%1$s\n<font color="#44D858">%2$2</font></string>
+    <string name="_"/>
+    <string name="_999">999</string>
+    <string name="_00_00_n00">00:00 00</string>
+    <!--<string name="progress_percent">%1$s %2$.1f</string>-->
+    <string name="precision_1">%1$.1f %2$s</string>
+    <string name="progress_percent">%1$d</string>
+    <string name="scan_complete">SCAN COMPLETE</string>
 </resources>

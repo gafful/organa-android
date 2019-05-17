@@ -368,15 +368,15 @@
         <View style="@style/StatsVerticalDivider"/>
         <TextView android:id="@+id/counter_remaining"
                   style="@style/CounterTextView"
-                  android:text="999"/>
+                  android:text="@string/_0"/>
         <TextView android:id="@+id/counter_remaining_label"
                   android:text="@string/remaining"
                   style="@style/CounterPaneLabelTextView"/>
         <View style="@style/StatsVerticalDivider"/>
         <TextView android:id="@+id/counter_duration"
                   style="@style/CounterTextView"
-                  android:textSize="22sp"
-                  android:text="00:00\n00"/>
+                  android:textSize="20sp"
+                  android:text="@string/_00_00_n00"/>
         <TextView android:id="@+id/counter_duration_label"
                   android:text="@string/duration"
                   style="@style/CounterPaneLabelTextView"/>
@@ -418,44 +418,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/dashboard_display_2"
                 app:layout_constraintTop_toTopOf="parent"
-                android:gravity="center"
-                android:text="@string/system_check"
-                android:textColor="@color/white"
+                tools:text="@string/_"
                 style="@style/DisplayTextView"/>
         <TextView
                 android:id="@+id/dashboard_display_2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/dashboard_display_3"
                 app:layout_constraintTop_toBottomOf="@+id/dashboard_display_1"
-                android:text="@string/src_ok_dest_ok"
-                android:gravity="center"
-                android:textColor="@color/bright_2"
                 style="@style/DisplayTextView"/>
         <TextView
                 android:id="@+id/dashboard_display_3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/dashboard_display_4"
                 app:layout_constraintTop_toBottomOf="@+id/dashboard_display_2"
-                android:text="@string/power_up_to_start"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:textColor="@color/yellow"
+                tools:text="@string/power_up_to_start"
                 style="@style/DisplayTextView"/>
         <TextView
                 android:id="@+id/dashboard_display_4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/dashboard_display_5"
                 app:layout_constraintTop_toBottomOf="@+id/dashboard_display_3"
-                android:text="@string/btm_dashes"
-                android:textColor="@color/yellow"
+                tools:text="@string/_"
                 style="@style/DisplayTextView"/>
         <TextView
                 android:id="@+id/dashboard_display_5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dashboard_display_4"
-                android:text="@string/mid_dashes"
-                android:textColor="@color/yellow"
+                tools:text="@string/_"
                 style="@style/DisplayTextView"/>
         <!--<TextView-->
                 <!--android:id="@+id/dashboard_display_6"-->
