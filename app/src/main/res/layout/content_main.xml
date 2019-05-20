@@ -160,49 +160,49 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View android:id="@+id/dashboard_border_1"
-          style="@style/DashboardBorder"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintEnd_toStartOf="@id/dashboard_counter_label"
-          app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />
+    <!--<View android:id="@+id/dashboard_border_1"-->
+          <!--style="@style/DashboardBorder"-->
+          <!--app:layout_constraintStart_toStartOf="parent"-->
+          <!--app:layout_constraintEnd_toStartOf="@id/dashboard_counter_label"-->
+          <!--app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />-->
 
-    <View android:id="@+id/dashboard_border_1_2"
-          style="@style/DashboardBorderVertical"
-          app:layout_constraintBottom_toBottomOf="@id/dashboard_counter_label"
-          app:layout_constraintStart_toStartOf="@id/dashboard_counter_label"
-          app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />
+    <!--<View android:id="@+id/dashboard_border_1_2"-->
+          <!--style="@style/DashboardBorderVertical"-->
+          <!--app:layout_constraintBottom_toBottomOf="@id/dashboard_counter_label"-->
+          <!--app:layout_constraintStart_toStartOf="@id/dashboard_counter_label"-->
+          <!--app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />-->
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/dashboard_counter_label"
-              app:layout_constraintTop_toBottomOf="@+id/dashboard_panel_layout"
-              app:layout_constraintBottom_toTopOf="@+id/dashboard_counter_layout"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintEnd_toStartOf="@+id/guide_dashboard_vert"
-              android:textSize="16sp"
-              android:padding="4dp"
-              android:gravity="center"
-              android:textColor="@color/blue"
-              android:text="@string/status"/>
+    <!--<TextView android:layout_width="wrap_content"-->
+              <!--android:layout_height="wrap_content"-->
+              <!--android:id="@+id/dashboard_counter_label"-->
+              <!--app:layout_constraintTop_toBottomOf="@+id/dashboard_panel_layout"-->
+              <!--app:layout_constraintBottom_toTopOf="@+id/dashboard_counter_layout"-->
+              <!--app:layout_constraintStart_toStartOf="parent"-->
+              <!--app:layout_constraintEnd_toStartOf="@+id/guide_dashboard_vert"-->
+              <!--android:textSize="16sp"-->
+              <!--android:padding="4dp"-->
+              <!--android:gravity="center"-->
+              <!--android:textColor="@color/blue"-->
+              <!--android:text="@string/status"/>-->
 
-    <View android:id="@+id/dashboard_border_2"
-          style="@style/DashboardBorder"
-          app:layout_constraintStart_toEndOf="@id/dashboard_counter_label"
-          app:layout_constraintEnd_toStartOf="@id/dashboard_engine_label"
-          app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />
+    <!--<View android:id="@+id/dashboard_border_2"-->
+          <!--style="@style/DashboardBorder"-->
+          <!--app:layout_constraintStart_toEndOf="@id/dashboard_counter_label"-->
+          <!--app:layout_constraintEnd_toStartOf="@id/dashboard_engine_label"-->
+          <!--app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />-->
 
-    <View android:id="@+id/dashboard_border_2_1"
-          style="@style/DashboardBorderVertical"
-          app:layout_constraintBottom_toBottomOf="@id/dashboard_counter_label"
-          app:layout_constraintStart_toEndOf="@id/dashboard_counter_label"
-          app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />
+    <!--<View android:id="@+id/dashboard_border_2_1"-->
+          <!--style="@style/DashboardBorderVertical"-->
+          <!--app:layout_constraintBottom_toBottomOf="@id/dashboard_counter_label"-->
+          <!--app:layout_constraintStart_toEndOf="@id/dashboard_counter_label"-->
+          <!--app:layout_constraintTop_toTopOf="@id/dashboard_counter_label" />-->
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/guide_dashboard_vert"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.23"/>
+            app:layout_constraintGuide_percent="0.1"/>
 
     <View android:id="@+id/dashboard_border_3_1_1"
           style="@style/DashboardBorderVertical"
@@ -221,7 +221,6 @@
               android:layout_height="wrap_content"
               android:id="@+id/dashboard_engine_label"
               app:layout_constraintTop_toBottomOf="@+id/dashboard_panel_layout"
-              app:layout_constraintBottom_toTopOf="@+id/dashboard_counter_layout"
               app:layout_constraintStart_toStartOf="@+id/guide_dashboard_vert"
               app:layout_constraintEnd_toEndOf="parent"
               android:textSize="16sp"
@@ -251,7 +250,7 @@
             android:scaleType="centerCrop"
             app:lottie_imageAssetsFolder="lottie"
             app:layout_constraintTop_toTopOf="@+id/dashboard_gears_outer"
-            app:layout_constraintStart_toEndOf="@+id/dashboard_counter_layout"
+            app:layout_constraintStart_toEndOf="@+id/guide_dashboard_vert"
             app:layout_constraintBottom_toBottomOf="@+id/dashboard_gears_outer"
             app:layout_constraintEnd_toStartOf="@+id/dashboard_power_switch"/>
 
@@ -266,7 +265,7 @@
             android:layout_marginTop="15dp"
             app:lottie_imageAssetsFolder="lottie"
             app:layout_constraintTop_toBottomOf="@+id/dashboard_engine_label"
-            app:layout_constraintStart_toEndOf="@+id/dashboard_counter_layout"
+            app:layout_constraintStart_toEndOf="@+id/guide_dashboard_vert"
             app:layout_constraintEnd_toStartOf="@+id/dashboard_power_switch"/>
 
     <com.airbnb.lottie.LottieAnimationView
@@ -333,54 +332,56 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guide_dashboard_vert"/>
 
-    <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            android:id="@+id/dashboard_counter_layout"
-            android:padding="2dp"
-            android:background="@drawable/transparent_bg_bordered"
-            app:layout_constraintTop_toBottomOf="@+id/dashboard_counter_label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guide_dashboard_vert"
-            app:layout_constraintBottom_toTopOf="@+id/dashboard_active_bar_btm">
+    <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:orientation="vertical"-->
+            <!--android:id="@+id/dashboard_counter_layout"-->
+            <!--android:padding="2dp"-->
+            <!--android:background="@drawable/transparent_bg_bordered"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/dashboard_counter_label"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintEnd_toStartOf="@id/guide_dashboard_vert"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/dashboard_active_bar_btm">-->
 
-        <TextView android:id="@+id/counter_mp3"
-                  style="@style/CounterTextView"
-                  android:text="@string/_0"/>
-        <TextView android:id="@+id/counter_mp3_label"
-                  style="@style/CounterPaneLabelTextView"
-                  android:text="@string/mp3"/>
-        <View style="@style/StatsVerticalDivider"/>
-        <TextView android:id="@+id/counter_cleaned"
-                  style="@style/CounterTextView"
-                  android:text="@string/_0"/>
-        <TextView android:id="@+id/counter_cleaned_label"
-                  android:text="@string/cleaned"
-                  style="@style/CounterPaneLabelTextView"/>
-        <View style="@style/StatsVerticalDivider"/>
-        <TextView android:id="@+id/counter_skipped"
-                  style="@style/CounterTextView"
-                  android:text="@string/_0"/>
-        <TextView android:id="@+id/counter_skipped_label"
-                  android:text="@string/skipped"
-                  style="@style/CounterPaneLabelTextView"/>
-        <View style="@style/StatsVerticalDivider"/>
-        <TextView android:id="@+id/counter_remaining"
-                  style="@style/CounterTextView"
-                  android:text="@string/_0"/>
-        <TextView android:id="@+id/counter_remaining_label"
-                  android:text="@string/remaining"
-                  style="@style/CounterPaneLabelTextView"/>
-        <View style="@style/StatsVerticalDivider"/>
-        <TextView android:id="@+id/counter_duration"
-                  style="@style/CounterTextView"
-                  android:textSize="20sp"
-                  android:text="@string/_00_00_n00"/>
-        <TextView android:id="@+id/counter_duration_label"
-                  android:text="@string/duration"
-                  style="@style/CounterPaneLabelTextView"/>
-    </LinearLayout>
+        <!--<TextView android:id="@+id/counter_mp3"-->
+                  <!--style="@style/CounterTextView"-->
+                  <!--android:text="@string/_0"/>-->
+        <!--<TextView android:id="@+id/counter_mp3_label"-->
+                  <!--style="@style/CounterPaneLabelTextView"-->
+                  <!--android:text="@string/mp3"/>-->
+        <!--<View style="@style/StatsVerticalDivider"/>-->
+        <!--<TextView android:id="@+id/counter_cleaned"-->
+                  <!--style="@style/CounterTextView"-->
+                  <!--android:text="@string/_0"/>-->
+        <!--<TextView android:id="@+id/counter_cleaned_label"-->
+                  <!--android:text="@string/cleaned"-->
+                  <!--style="@style/CounterPaneLabelTextView"/>-->
+        <!--<View style="@style/StatsVerticalDivider"/>-->
+        <!--<TextView android:id="@+id/counter_skipped"-->
+                  <!--style="@style/CounterTextView"-->
+                  <!--android:text="@string/_0"/>-->
+        <!--<TextView android:id="@+id/counter_skipped_label"-->
+                  <!--android:text="@string/skipped"-->
+                  <!--style="@style/CounterPaneLabelTextView"/>-->
+        <!--<View style="@style/StatsVerticalDivider"/>-->
+        <!--<TextView android:id="@+id/counter_remaining"-->
+                  <!--style="@style/CounterTextView"-->
+                  <!--android:text="@string/_0"/>-->
+        <!--<TextView android:id="@+id/counter_remaining_label"-->
+                  <!--android:text="@string/remaining"-->
+                  <!--style="@style/CounterPaneLabelTextView"/>-->
+        <!--<View style="@style/StatsVerticalDivider"/>-->
+        <!--<TextView android:id="@+id/counter_duration"-->
+                  <!--style="@style/CounterTextView"-->
+                  <!--android:textSize="20sp"-->
+                  <!--android:text="@string/_00_00_n00"/>-->
+        <!--<TextView android:id="@+id/counter_duration_label"-->
+                  <!--android:text="@string/duration"-->
+                  <!--style="@style/CounterPaneLabelTextView"/>-->
+        <!--<Chronometer style="@style/CounterPaneLabelTextView"-->
+        <!--android:id="@+id/chronometer"/>-->
+    <!--</LinearLayout>-->
 
     <!--<ProgressBar-->
             <!--android:id="@+id/vprogressbar"-->

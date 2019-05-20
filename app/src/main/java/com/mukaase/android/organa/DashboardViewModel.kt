@@ -254,6 +254,10 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 ////        ctx.startForeground(ONGOING_NOTIFICATION_ID, notification)
     }
 
+    fun stopWatch(){
+
+    }
+
 //    // Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
 //    // you should execute this code as soon as your app starts.
 //    private fun createNotificationChannel() {

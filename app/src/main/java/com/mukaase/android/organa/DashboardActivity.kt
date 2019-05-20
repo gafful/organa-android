@@ -70,10 +70,10 @@ class DashboardActivity : AppCompatActivity() {
 
 
         viewModel.engineStats.observe(this, Observer {
-            counter_cleaned.text = it.cleaned.toString()
-            counter_skipped.text = it.skipped.toString()
-            counter_mp3.text = it.progress.toString()
-            counter_remaining.text = getString(R.string.precision_1, it.progress, "%")
+//            counter_cleaned.text = it.cleaned.toString()
+//            counter_skipped.text = it.skipped.toString()
+//            counter_mp3.text = it.progress.toString()
+//            counter_remaining.text = getString(R.string.precision_1, it.progress, "%")
 
             dashboard_display_1.text = getString(R.string.scanning_, it.audioMetadata.fileName)
             dashboard_display_2.text = getString(R.string.title_, it.audioMetadata.title)
@@ -91,7 +91,9 @@ class DashboardActivity : AppCompatActivity() {
                 dashboard_power_switch.setMinAndMaxFrame(1, 11)
                 dashboard_power_switch.frame = 1
 //                dashboard_power_switch.playAnimation()
-                counter_remaining.text = "100%"
+//                counter_remaining.text = "100%"
+//
+//                chronometer.stop()
 
 
                 dashboard_display_1.text = getString(R.string.scan_complete)
@@ -102,9 +104,9 @@ class DashboardActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.timeElapsed.observe(this, Observer {
-            counter_duration.text = it
-        })
+//        viewModel.timeElapsed.observe(this, Observer {
+//            counter_duration.text = it
+//        })
     }
 
     override fun onDestroy() {
@@ -118,10 +120,10 @@ class DashboardActivity : AppCompatActivity() {
         //TODO: Do within a coroutine
         dashboard_power_switch.frame = 35
 
-        counter_remaining_label.isSelected = true
-        counter_cleaned_label.isSelected = true
-        counter_skipped_label.isSelected = true
-        counter_duration_label.isSelected = true
+//        counter_remaining_label.isSelected = true
+//        counter_cleaned_label.isSelected = true
+//        counter_skipped_label.isSelected = true
+//        counter_duration_label.isSelected = true
         dashboard_src_panel_name.isSelected = true
 //        dashboard_src_panel_path.isSelected = true
         dashboard_dest_panel_name.isSelected = true
@@ -166,6 +168,7 @@ class DashboardActivity : AppCompatActivity() {
 //                updateRenderTimesPerLayer()
 //                runGears()
                 println("wee dunn!!!")
+//                chronometer.start()
                 viewModel.start(this)
                 runGears()
 //                updateDisplayInfo()
