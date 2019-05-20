@@ -22,8 +22,6 @@ class DashboardActivity : AppCompatActivity() {
         val vmFactory = InjectorUtils.provideConsoleViewModel(this)
         viewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
         initObservers()
-        viewModel.checkStoragePermissions(this)
-
 
 //        dashboard_display_layout.children.iterator().
 
@@ -35,6 +33,11 @@ class DashboardActivity : AppCompatActivity() {
 //            TextViewCompat.setPrecomputedText(textView, precomputedText)
 //        }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.checkStoragePermissions(this)
     }
 
     private fun initObservers() {
