@@ -33,10 +33,13 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     var srcDirName: MutableLiveData<String> = MutableLiveData()
     var srcDirPath: MutableLiveData<String> = MutableLiveData()
     var srcDirAudioFileCount: MutableLiveData<Int> = MutableLiveData()
+    var srcFiles: MutableLiveData<Sequence<File>> = MutableLiveData()
+    var srcStatus: MutableLiveData<String> = MutableLiveData()
     var srcDir: MutableLiveData<Directory> = MutableLiveData()
     var destDirName: MutableLiveData<String> = MutableLiveData()
     var destDirPath: MutableLiveData<String> = MutableLiveData()
     var destDirAvSpace: MutableLiveData<String> = MutableLiveData()
+    var destStatus: MutableLiveData<String> = MutableLiveData()
     var engineStats: MutableLiveData<EngineStats> = MutableLiveData()
     var timeElapsed: MutableLiveData<String> = MutableLiveData()
     val d: Int by Delegates.observable(0,
@@ -44,6 +47,11 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
             if (new == 5){
                 println("fa ya-ya-ya-yahh $prop --- $old")
             }
+    })
+    val sourceSet: Set<File> by Delegates.observable(
+        setOf(),
+        { prop, old, new ->
+            new.size
     })
 
 
@@ -80,12 +88,10 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
         } else {
             // Permission has already been granted
             // Extra check for isReadable ...
-            //TODO: Osei, ...
-//            initSourceAndDestDirectories()
+            // TODO: Run at the same time
             setSourceDirectory()
             setDestDirectory()
         }
-
     }
 
     /*For your app to display to the user without any visible pauses, the main thread has to update the screen every 16ms
@@ -97,23 +103,48 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 
         srcDirName.value = source.name
         srcDirPath.value = source.path
+        srcStatus.value = CHECK_IN_PROGRESS
 
-        var audioCount = 0
-        var nonAudioCount = 0
+        if (!source.isDirectory) srcStatus.value = CHECK_FAIL
+        if (!source.canRead() && !source.setReadable(true)) srcStatus.value = UNREADABLE
+
+
+//        var audioCount = 0
+//        var nonAudioCount = 0
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                source
+
+//                val ct = source
+//                    .walkTopDown()
+//                    .filter { !it.isDirectory && !it.isHidden }
+////                    .count {
+////                    it.extension.equals("mp3", true) or
+////                            it.extension.equals("m4a", true) or
+////                            it.extension.equals("wma", true)
+////                }
+//
+//                println("countss: $ct")
+
+                val srcFilesSet = source
                     .walkTopDown()
                     .filter { !it.isDirectory && !it.isHidden }
                     .filter {
                         it.extension.equals("mp3", true) or
                                 it.extension.equals("m4a", true) or
                                 it.extension.equals("wma", true)
+                    }.mapIndexed { index, file ->
+                        println("file is: ${file}")
+                        srcDirAudioFileCount.postValue(index + 1)
+                        file
                     }
-                    .forEach {
-                        println("ext is: ${it.extension}")
-                        srcDirAudioFileCount.postValue(audioCount)
-                    }
+//                    .forEach {
+//                        println("ext is: ${it.extension}")
+//                        srcDirAudioFileCount.postValue(audioCount)
+//                        sourceSet.plus(it)
+//                    }
+                srcFiles.postValue(srcFilesSet)
+                srcStatus.postValue(CHECK_OK)
+                println("srcFilesSet is: ${srcFilesSet.count()}")
             }
         }
     }
@@ -121,10 +152,12 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     @UiThread
     private fun setDestDirectory(destDir: File = FileUtils.publicMusicDir()) {
         println("setDestDirectory")
-
+        destStatus.value = CHECK_IN_PROGRESS
         destDirName.value = destDir.name
         destDirPath.value = destDir.path
         destDirAvSpace.value = FileUtils.readableFileSize(destDir.freeSpace)
+        println("destDir.canWrite(): ${destDir.canWrite()} ---- destDir.setWritable(true): ${destDir.setWritable(true)}")
+        if (destDir.canWrite() || destDir.setWritable(true)) destStatus.value = CHECK_OK else destStatus.value = UNWRITABLE
     }
 
     @SuppressLint("PrivateResource")
@@ -318,5 +351,10 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 
     companion object {
         internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
+        internal const val CHECK_IN_PROGRESS = "CHECK_IN_PROGRESS"
+        internal const val CHECK_OK = "CHECK_OK"
+        internal const val CHECK_FAIL = "CHECK_FAIL"
+        internal const val UNREADABLE = "UNREADABLE"
+        internal const val UNWRITABLE = "UNWRITABLE"
     }
 }

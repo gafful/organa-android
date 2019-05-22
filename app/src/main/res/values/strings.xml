@@ -23,7 +23,10 @@
     <string name="mid_dashes">- - - - - - - - - - - - - - - - -</string>
     <string name="_0">0</string>
     <string name="set">SET</string>
-    <string name="src_ok">SOURCE: OK</string>
+    <string name="_ok">%1$s: OK</string>
+    <string name="_fail">%1$s: FAIL</string>
+    <string name="_unreadable">%1$s: UNREADABLE</string>
+    <string name="_unwritable">%1$s: UNWRITABLE</string>
     <string name="dest_ok">DESTINATION: OK</string>
     <string name="duration">DURATION</string>
     <string name="_0_00">0.00</string>
@@ -31,6 +34,7 @@
     <string name="choose_source_folder">CHOOSE SOURCE FOLDER</string>
     <string name="choose_dest_folder">CHOOSE DESTINATION FOLDER</string>
     <string name="scanning_">SCANNING: %1$s</string>
+    <string name="_scanning">%1$s: SCANNING</string>
     <string name="title_"><b>TITLE: </b>%1$s</string>
     <string name="album_">ALBUM: %1$s</string>
     <string name="artist_">ARTIST: %1$s</string>
@@ -42,4 +46,5 @@
     <string name="precision_1">%1$.1f %2$s</string>
     <string name="progress_percent">%1$d</string>
     <string name="scan_complete">SCAN COMPLETE</string>
+    <string name="unknown">UNKNOWN</string>
 </resources>

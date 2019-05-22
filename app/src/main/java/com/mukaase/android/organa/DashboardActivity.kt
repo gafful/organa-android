@@ -22,7 +22,7 @@ class DashboardActivity : AppCompatActivity() {
         val vmFactory = InjectorUtils.provideConsoleViewModel(this)
         viewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
         initObservers()
-
+        viewModel.checkStoragePermissions(this)
 //        dashboard_display_layout.children.iterator().
 
 //        viewLifecycleOwner.lifecycleScope.launch {
@@ -35,18 +35,14 @@ class DashboardActivity : AppCompatActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.checkStoragePermissions(this)
-    }
-
     private fun initObservers() {
         println("initObservers")
 
+        // Source
         viewModel.srcDirName.observe(this, Observer {
             dashboard_src_panel_name.text = it
-            dashboard_display_1.text = getString(R.string.system_check)
-            dashboard_display_2.text = getString(R.string.src_ok)
+//            dashboard_display_1.text = getString(R.string.system_check)
+//            dashboard_display_2.text = getString(R.string._ok)
         })
         viewModel.srcDirPath.observe(this, Observer {
             dashboard_src_panel_path.text = it
@@ -56,10 +52,11 @@ class DashboardActivity : AppCompatActivity() {
             dashboard_src_panel_file_count.text = it.toString()
         })
 
+        // Destination
         viewModel.destDirName.observe(this, Observer {
             dashboard_dest_panel_name.text = it
-            dashboard_display_3.text = getString(R.string.dest_ok)
-            dashboard_display_5.text = getString(R.string.power_up_to_start)
+//            dashboard_display_3.text = getString(R.string.dest_ok)
+//            dashboard_display_5.text = getString(R.string.power_up_to_start)
         })
         viewModel.destDirPath.observe(this, Observer {
             dashboard_dest_panel_path.text = it
@@ -69,40 +66,66 @@ class DashboardActivity : AppCompatActivity() {
         })
 
 
-        viewModel.engineStats.observe(this, Observer {
-//            counter_cleaned.text = it.cleaned.toString()
+        // Display
+        viewModel.srcStatus.observe(this, Observer { status ->
+            println("display10: $status")
+            val display1 = when (status) {
+                DashboardViewModel.CHECK_IN_PROGRESS -> getString(R.string._scanning, "SOURCE")
+                DashboardViewModel.CHECK_OK -> getString(R.string._ok, "SOURCE")
+                DashboardViewModel.CHECK_FAIL -> getString(R.string._fail, "SOURCE")
+                DashboardViewModel.UNREADABLE -> getString(R.string._unreadable, "SOURCE")
+                else -> getString(R.string.unknown)
+            }
+            println("display11: $display1")
+            dashboard_display_1.text = display1
+        })
+
+        viewModel.destStatus.observe(this, Observer { status ->
+            val display2 = when (status) {
+                //todo: add an "initializing" state
+                DashboardViewModel.CHECK_IN_PROGRESS -> getString(R.string._scanning, "DESTINATION")
+                DashboardViewModel.CHECK_OK -> getString(R.string._ok, "DESTINATION")
+                DashboardViewModel.UNWRITABLE -> getString(R.string._unwritable, "DESTINATION")
+                else -> getString(R.string.unknown)
+            }
+            dashboard_display_2.text = display2
+        })
+
+        if (dashboard_power_switch.isEnabled) {
+            viewModel.engineStats.observe(this, Observer {
+                //            counter_cleaned.text = it.cleaned.toString()
 //            counter_skipped.text = it.skipped.toString()
 //            counter_mp3.text = it.progress.toString()
 //            counter_remaining.text = getString(R.string.precision_1, it.progress, "%")
 
-            dashboard_display_1.text = getString(R.string.scanning_, it.audioMetadata.fileName)
-            dashboard_display_2.text = getString(R.string.title_, it.audioMetadata.title)
-            dashboard_display_3.text = getString(R.string.artist_, it.audioMetadata.artist)
-            dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
-            dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
+                dashboard_display_1.text = getString(R.string.scanning_, it.audioMetadata.fileName)
+                dashboard_display_2.text = getString(R.string.title_, it.audioMetadata.title)
+                dashboard_display_3.text = getString(R.string.artist_, it.audioMetadata.artist)
+                dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
+                dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
 
-            println("monitoring the progress: ${it.progress}")
+                println("monitoring the progress: ${it.progress}")
 
-            if (it.progress == 100.0f){
-                dashboard_gears.cancelAnimation()
-                dashboard_gears_outer.cancelAnimation()
+                if (it.progress == 100.0f) {
+                    dashboard_gears.cancelAnimation()
+                    dashboard_gears_outer.cancelAnimation()
 //                dashboard_progress_indicator.cancelAnimation()
-                dashboard_power_switch.removeAllAnimatorListeners()
-                dashboard_power_switch.setMinAndMaxFrame(1, 11)
-                dashboard_power_switch.frame = 1
+                    dashboard_power_switch.removeAllAnimatorListeners()
+                    dashboard_power_switch.setMinAndMaxFrame(1, 11)
+                    dashboard_power_switch.frame = 1
 //                dashboard_power_switch.playAnimation()
 //                counter_remaining.text = "100%"
 //
 //                chronometer.stop()
 
-
-                dashboard_display_1.text = getString(R.string.scan_complete)
-                dashboard_display_2.text = formatHtmlString(R.string.title_, it.audioMetadata.title)
-                dashboard_display_3.text = getString(R.string.artist_, it.audioMetadata.artist)
-                dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
-                dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
-            }
-        })
+                    dashboard_display_1.text = getString(R.string.scan_complete)
+                    dashboard_display_2.text = formatHtmlString(R.string.title_, it.audioMetadata.title)
+                    dashboard_display_3.text = getString(R.string.artist_, it.audioMetadata.artist)
+                    dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
+                    dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
+                }
+            })
+        }
 
 //        viewModel.timeElapsed.observe(this, Observer {
 //            counter_duration.text = it
@@ -160,6 +183,11 @@ class DashboardActivity : AppCompatActivity() {
 
     fun onPowerSwitch(v: View) {
         println("onPowerSwitch")
+
+        if (DashboardViewModel.CHECK_OK != viewModel.srcStatus.value ||
+            DashboardViewModel.CHECK_OK != viewModel.destStatus.value
+        ) return
+
         val animatorListener = AnimatorListenerAdapter(
             onStart = { },
             onEnd = {
