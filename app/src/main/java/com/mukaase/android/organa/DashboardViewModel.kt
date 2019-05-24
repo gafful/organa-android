@@ -44,15 +44,15 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     var timeElapsed: MutableLiveData<String> = MutableLiveData()
     val d: Int by Delegates.observable(0,
         { prop, old, new ->
-            if (new == 5){
+            if (new == 5) {
                 println("fa ya-ya-ya-yahh $prop --- $old")
             }
-    })
+        })
     val sourceSet: Set<File> by Delegates.observable(
         setOf(),
         { prop, old, new ->
             new.size
-    })
+        })
 
 
     // FIXME: Keep Android code out of the view model.
@@ -114,17 +114,6 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
 
-//                val ct = source
-//                    .walkTopDown()
-//                    .filter { !it.isDirectory && !it.isHidden }
-////                    .count {
-////                    it.extension.equals("mp3", true) or
-////                            it.extension.equals("m4a", true) or
-////                            it.extension.equals("wma", true)
-////                }
-//
-//                println("countss: $ct")
-
                 val srcFilesSet = source
                     .walkTopDown()
                     .filter { !it.isDirectory && !it.isHidden }
@@ -137,15 +126,9 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
                         srcDirAudioFileCount.postValue(index + 1)
                         file
                     }
-//                    .forEach {
-//                        println("ext is: ${it.extension}")
-//                        srcDirAudioFileCount.postValue(audioCount)
-//                        sourceSet.plus(it)
-//                    }
                 srcFiles.postValue(srcFilesSet)
-                srcStatus.postValue(CHECK_OK)
-                println("srcFilesSet is: ${srcFilesSet.count()}")
             }
+            srcStatus.postValue(CHECK_OK)
         }
     }
 
@@ -157,7 +140,8 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
         destDirPath.value = destDir.path
         destDirAvSpace.value = FileUtils.readableFileSize(destDir.freeSpace)
         println("destDir.canWrite(): ${destDir.canWrite()} ---- destDir.setWritable(true): ${destDir.setWritable(true)}")
-        if (destDir.canWrite() || destDir.setWritable(true)) destStatus.value = CHECK_OK else destStatus.value = UNWRITABLE
+        if (destDir.canWrite() || destDir.setWritable(true)) destStatus.value = CHECK_OK else destStatus.value =
+            UNWRITABLE
     }
 
     @SuppressLint("PrivateResource")
@@ -287,7 +271,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 ////        ctx.startForeground(ONGOING_NOTIFICATION_ID, notification)
     }
 
-    fun stopWatch(){
+    fun stopWatch() {
 
     }
 
