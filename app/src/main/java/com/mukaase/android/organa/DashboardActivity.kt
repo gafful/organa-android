@@ -16,6 +16,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var viewModel: DashboardViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        logd("onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
@@ -36,7 +37,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun initObservers() {
-        println("initObservers")
+        logd("initObservers")
 
         // Source
         viewModel.srcDirName.observe(this, Observer {
@@ -68,7 +69,7 @@ class DashboardActivity : AppCompatActivity() {
 
         // Display
         viewModel.srcStatus.observe(this, Observer { status ->
-            println("display10: $status")
+            logd("display10: $status")
             val display1 = when (status) {
                 DashboardViewModel.CHECK_IN_PROGRESS -> getString(R.string._scanning, "SOURCE")
                 DashboardViewModel.CHECK_OK -> getString(R.string._ok, "SOURCE")
@@ -76,7 +77,7 @@ class DashboardActivity : AppCompatActivity() {
                 DashboardViewModel.UNREADABLE -> getString(R.string._unreadable, "SOURCE")
                 else -> getString(R.string.unknown)
             }
-            println("display11: $display1")
+            logd("display11: $display1")
             dashboard_display_1.text = display1
         })
 
@@ -104,7 +105,7 @@ class DashboardActivity : AppCompatActivity() {
                 dashboard_display_4.text = getString(R.string.album_, it.audioMetadata.album)
                 dashboard_display_5.text = getString(R.string.scanning_, it.audioMetadata.fileName)
 
-                println("monitoring the progress: ${it.progress}")
+                logd("monitoring the progress: ${it.progress}")
 
                 if (it.progress == 100.0f) {
                     dashboard_gears.cancelAnimation()
@@ -133,12 +134,12 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        println("onDestroy")
+        logd("onDestroy")
         super.onDestroy()
     }
 
     private fun initViews() {
-        println("initViews")
+        logd("initViews")
 
         //TODO: Do within a coroutine
         dashboard_power_switch.frame = 35
@@ -152,11 +153,11 @@ class DashboardActivity : AppCompatActivity() {
         dashboard_dest_panel_name.isSelected = true
 //        dashboard_dest_panel_path.isSelected = true
 
-        println("wan2: ${Environment.getExternalStorageDirectory()}")
+        logd("wan2: ${Environment.getExternalStorageDirectory()}")
         getExternalFilesDirs(null).forEach({
-            println("it: $it")
+            logd("it: $it")
         })
-        println("two: ${filesDir}")
+        logd("two: ${filesDir}")
 //        2019-05-15 20:54:20.108 14345-14345/com.mukaase.android.organa I/System.out: wan2: /storage/emulated/0
 //        2019-05-15 20:54:20.114 14345-14345/com.mukaase.android.organa I/System.out: wan: [Ljava.io.File;@90b0e5
 //        2019-05-15 20:54:20.114 14345-14345/com.mukaase.android.organa I/System.out: two: /data/user/0/com.mukaase.android.organa/files
@@ -171,18 +172,18 @@ class DashboardActivity : AppCompatActivity() {
         viewModel.onActivityResult(requestCode, resultCode, resultData)
     }
 
-    fun onSourceDirBtnClick(v: View) {
-        println("onSourceDirBtnClick")
+    fun onSourceDirBtnClick(@Suppress("UNUSED_PARAMETER") v: View) {
+        logd("onSourceDirBtnClick")
         viewModel.openSourceDirectory(this)
     }
 
-    fun onDestDirBtnClick(v: View) {
-        println("onDestDirBtnClick")
+    fun onDestDirBtnClick(@Suppress("UNUSED_PARAMETER") v: View) {
+        logd("onDestDirBtnClick")
         viewModel.openDestDirectory(this)
     }
 
-    fun onPowerSwitch(v: View) {
-        println("onPowerSwitch")
+    fun onPowerSwitch(@Suppress("UNUSED_PARAMETER") v: View) {
+        logd("onPowerSwitch")
 
         if (DashboardViewModel.CHECK_OK != viewModel.srcStatus.value ||
             DashboardViewModel.CHECK_OK != viewModel.destStatus.value
@@ -195,7 +196,7 @@ class DashboardActivity : AppCompatActivity() {
 //                animationView.performanceTracker?.logRenderTimes()
 //                updateRenderTimesPerLayer()
 //                runGears()
-                println("wee dunn!!!")
+                logd("wee dunn!!!")
 //                chronometer.start()
                 viewModel.start(this)
                 runGears()
@@ -214,8 +215,8 @@ class DashboardActivity : AppCompatActivity() {
         dashboard_power_switch.playAnimation()
     }
 
-    fun onSettingsClick(v: View) {
-        println("onSettingsClick")
+    fun onSettingsClick(@Suppress("UNUSED_PARAMETER") v: View) {
+        logd("onSettingsClick")
     }
 
     private fun updateDisplayInfo() {
@@ -223,7 +224,7 @@ class DashboardActivity : AppCompatActivity() {
         dashboard_display_1.apply {
             text = "[SCANNING]: AUD-WA0001231238.mp3"
             gravity = Gravity.START
-            setTextColor(resources.getColor(R.color.bright_2))
+            setTextColor(resources.getColor(R.color.bright_2))//TODO: Deprecated method
         }
         dashboard_display_2.apply {
             text = "TITLE: KPO"
@@ -250,7 +251,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun runGears() {
-        println("runGears")
+        logd("runGears")
         dashboard_gears.playAnimation()
         dashboard_gears_outer.playAnimation()
 //        dashboard_progress_indicator.playAnimation()
@@ -258,7 +259,7 @@ class DashboardActivity : AppCompatActivity() {
 //        val r = Runnable {
 ////            sendMessage(MSG, params.id)
 ////            taskFinished(params, false)
-//            println("stop!!")
+//            logd("stop!!")
 //            dashboard_gears.cancelAnimation()
 //            dashboard_power_switch.removeAllAnimatorListeners()
 //            dashboard_power_switch.setMinAndMaxFrame(1, 11)
@@ -272,7 +273,7 @@ class DashboardActivity : AppCompatActivity() {
     private fun timer(millisInFuture: Long, countDownInterval: Long): CountDownTimer {
         return object : CountDownTimer(millisInFuture, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
-                println("*")
+                logd("*")
 //                counter_progress_bar.progress += 10
             }
 

@@ -148,7 +148,7 @@ object FileUtils {
 
         when (uri.scheme) {
             "file" -> {
-                path = uri.path
+                path = uri.path//Type mismatch: inferred type is String? but String was expected
             }
             "content" -> {
 
@@ -273,7 +273,7 @@ object FileUtils {
         var nonAudioCount = 0
 
         file.walkTopDown().forEach {
-            println("ext is: ${it.extension}")
+            logd("ext is: ${it.extension}")
             when (it.extension.toUpperCase()) {
                 "MP3" -> {
                     audioCount += 1
@@ -285,7 +285,7 @@ object FileUtils {
             }
         }
 
-        println("countzz: $audioCount -- $nonAudioCount")
+        logd("countzz: $audioCount -- $nonAudioCount")
 //        source = Source(SOURCE_DIRECTORY, srcFile.name, srcFile.path, mp3, ukn)
         return Directory(file.name, file.path, audioCount)
     }

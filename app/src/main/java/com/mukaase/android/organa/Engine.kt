@@ -9,7 +9,7 @@ class Engine(private val tagger: Tagger) {
     private lateinit var currentFile: File
 
     init {
-        println("Awwwwesoooomme---")
+        logd("Awwwwesoooomme---")
     }
 
     suspend fun start(audioCount: Int, src: File, dest: File): Sequence<EngineStats> {
@@ -35,7 +35,7 @@ class Engine(private val tagger: Tagger) {
                 currentFile = file
                 metadata = tagger.metadata(file)
                 if (tagger.skipped()) skipped += 1 else cleaned += 1
-                println("skippp: $skipped --- $cleaned --- ${index.toFloat()+1} --- $audioCount --- ${index.toFloat().div(audioCount)}")
+                logd("skippp: $skipped --- $cleaned --- ${index.toFloat()+1} --- $audioCount --- ${index.toFloat().div(audioCount)}")
                 EngineStats(metadata, cleaned, skipped, percent((index + 1), audioCount))
             }
     }
