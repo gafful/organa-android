@@ -43,7 +43,7 @@ See also the list of [contributors](https://github.com/gafful/organa-android/con
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gafful/organa-android/tags). 
 
 ## License
 
