@@ -25,10 +25,11 @@ $ cd organa-android
 $ ./gradlew installDebug
 ```
 
-Monitor logcat
+## Extras (Optional)
 
 ```
-$ adb logcat Organa:D *:S -b all -v color
+$ ./gradlew lint test # run lint. cos circle will eventually do that
+$ adb logcat Organa:D *:S -b all -v color # monitor logcat
 ```
 
 ## Running the tests

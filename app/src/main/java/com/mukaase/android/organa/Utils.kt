@@ -5,6 +5,7 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.StringRes
 import androidx.annotation.IntegerRes
+import androidx.annotation.ColorRes
 import androidx.core.text.HtmlCompat
 import android.util.Log
 import android.widget.Toast
@@ -21,9 +22,7 @@ fun Any.logd(message: String){
   Log.d("Organa", "${this::class.java.simpleName} $message")
 }
 
-fun Any.logE(message: String) {
-  Log.e("Organa", message)
-}
+fun Any.logE(message: String) = Log.e("Organa", message)
 
 // Debug - method + params
 // Info - system / user initiated call
@@ -33,4 +32,4 @@ fun AppCompatActivity.toast(message: String){
   Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
 }
 
-fun Context.colour(@IntegerRes resId: Int) = ContextCompat.getColor(this, resId)
+fun Context.colour(@ColorRes resId: Int) = ContextCompat.getColor(this, resId)
