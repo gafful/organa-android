@@ -4,9 +4,11 @@ import android.content.Context
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import androidx.annotation.StringRes
+import androidx.annotation.IntegerRes
 import androidx.core.text.HtmlCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 
 
 fun Context.formatHtmlString(@StringRes resId: Int, vararg formatArgs: Any): Spanned {
@@ -19,6 +21,10 @@ fun Any.logd(message: String){
   Log.d("Organa", "${this::class.java.simpleName} $message")
 }
 
+fun Any.logE(message: String) {
+  Log.e("Organa", message)
+}
+
 // Debug - method + params
 // Info - system / user initiated call
 // Warn - could become an error
@@ -27,6 +33,4 @@ fun AppCompatActivity.toast(message: String){
   Toast.makeText(this, message , Toast.LENGTH_SHORT).show();
 }
 
-// fun AppCompatActivity.colour(message: String){
-//   ContextCompat.getColor(context, R.color.your_color);
-// }
+fun Context.colour(@IntegerRes resId: Int) = ContextCompat.getColor(this, resId)

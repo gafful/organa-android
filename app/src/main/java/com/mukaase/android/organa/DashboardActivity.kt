@@ -224,7 +224,8 @@ class DashboardActivity : AppCompatActivity() {
         dashboard_display_1.apply {
             text = "[SCANNING]: AUD-WA0001231238.mp3"
             gravity = Gravity.START
-            setTextColor(resources.getColor(R.color.bright_2))//TODO: Deprecated method
+            // setTextColor(resources.getColor(R.color.bright_2))//TODO: Deprecated method
+            setTextColor(colour(R.color.bright_2))//TODO: Deprecated method
         }
         dashboard_display_2.apply {
             text = "TITLE: KPO"

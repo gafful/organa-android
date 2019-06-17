@@ -212,12 +212,18 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
         GlobalScope.launch {
             val time = measureTimeMillis {
                 withContext(Dispatchers.IO) {
-                    val infos =
+                    try {
+                                            val infos =
                         engine.start(srcDirAudioFileCount.value!!, File((srcDirPath.value)), File(destDirPath.value))
                     infos.forEachIndexed { index, stats ->
                         logd("are we there: $stats")
 //                        engineStats.postValue(EngineStats(metadata, index, index, index.toFloat()))
                         engineStats.postValue(stats)
+                        }
+                    }
+                    catch(e: Exception) {
+                        logE("${e}")
+                        srcStatus.postValue(e.message)
                     }
                 }
             }
