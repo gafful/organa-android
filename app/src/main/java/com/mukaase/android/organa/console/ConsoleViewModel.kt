@@ -11,6 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mukaase.android.organa.R
+import com.mukaase.android.organa.data.Directory
+import com.mukaase.android.organa.data.EngineStats
+import com.mukaase.android.organa.engine.Engine
+import com.mukaase.android.organa.util.FileUtils
+import com.mukaase.android.organa.util.logD
+import com.mukaase.android.organa.util.logE
 import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,7 +29,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 import kotlin.system.measureTimeMillis
 
-class DashboardViewModel(val engine: Engine) : ViewModel() {
+class ConsoleViewModel(val engine: Engine) : ViewModel() {
 
     private val CHANNEL_ID = "wan"
     // A ViewModel must never reference a view, Lifecycle, or any class that may hold a reference to the activity context.
@@ -45,7 +53,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     val d: Int by Delegates.observable(0,
         { prop, old, new ->
             if (new == 5) {
-                logd("fa ya-ya-ya-yahh $prop --- $old")
+                logD("fa ya-ya-ya-yahh $prop --- $old")
             }
         })
     val sourceSet: Set<File> by Delegates.observable(
@@ -54,52 +62,12 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
             new.size
         })
 
-
-    // FIXME: Keep Android code out of the view model.
-    // FIXME: Views, fragments, activities, and contexts are Android specific code
-    fun checkStoragePermissions(ctx: Activity) {
-        logd("checkStoragePermissions")
-        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    ctx,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            ) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(
-                    ctx,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    REQUEST_CODE_WRITE_EXT_STORAGE
-                )
-
-                // REQUEST_CODE_WRITE_EXT_STORAGE is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        } else {
-            // Permission has already been granted
-            // Extra check for isReadable ...
-            // TODO: Run at the same time
-            setSourceDirectory()
-            setDestDirectory()
-        }
-    }
-
     /*For your app to display to the user without any visible pauses, the main thread has to update the screen every 16ms
     or more often, which is about 60 frames per second. Many common tasks take longer than this, such as parsing large
     JSON datasets, writing data to a database, or fetching data from the network.*/
     @UiThread
-    private fun setSourceDirectory(source: File = FileUtils.whatsAppAudioDir()) {
-        logd("setSourceDirectory")
+    fun setSourceDirectory(source: File = FileUtils.whatsAppAudioDir()) {
+        logD("setSourceDirectory")
 
         srcDirName.value = source.name
         srcDirPath.value = source.path
@@ -111,7 +79,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 
 //        var audioCount = 0
 //        var nonAudioCount = 0
-        GlobalScope.launch {
+        viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
                 val srcFilesSet = source
@@ -122,7 +90,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
                                 it.extension.equals("m4a", true) or
                                 it.extension.equals("wma", true)
                     }.mapIndexed { index, file ->
-                        logd("file is: ${file}")
+                        logD("file is: ${file}")
                         srcDirAudioFileCount.postValue(index + 1)
                         file
                     }
@@ -133,27 +101,27 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     }
 
     @UiThread
-    private fun setDestDirectory(destDir: File = FileUtils.publicMusicDir()) {
-        logd("setDestDirectory")
+    fun setDestDirectory(destDir: File = FileUtils.publicMusicDir()) {
+        logD("setDestDirectory")
         destStatus.value = CHECK_IN_PROGRESS
         destDirName.value = destDir.name
         destDirPath.value = destDir.path
         destDirAvSpace.value = FileUtils.readableFileSize(destDir.freeSpace)
-        logd("destDir.canWrite(): ${destDir.canWrite()} ---- destDir.setWritable(true): ${destDir.setWritable(true)}")
+        logD("destDir.canWrite(): ${destDir.canWrite()} ---- destDir.setWritable(true): ${destDir.setWritable(true)}")
         if (destDir.canWrite() || destDir.setWritable(true)) destStatus.value = CHECK_OK else destStatus.value =
             UNWRITABLE
     }
 
     @SuppressLint("PrivateResource")
-    fun openSourceDirectory(context: DashboardActivity) {
-        logd("openSourceDirectory")
+    fun openSourceDirectory(context: ConsoleActivity) {
+        logD("openSourceDirectory")
         // Check if readable
         ChooserDialog(context)
             .withFilter(true, false)
             .withStartFile(File(srcDirPath.value).parent)
             .withResources(R.string.choose_source_folder, R.string.title_choose, R.string.dialog_cancel)
             .withChosenListener { path, pathFile ->
-                logd("FILE: $path; PATHFILE: $pathFile")
+                logD("FILE: $path; PATHFILE: $pathFile")
                 //FILE: /storage/emulated/0; PATHFILE: /storage/emulated/0
 
                 setSourceDirectory(pathFile)
@@ -180,8 +148,8 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     }
 
     @SuppressLint("PrivateResource")
-    fun openDestDirectory(context: DashboardActivity) {
-        logd("openDestDirectory")
+    fun openDestDirectory(context: ConsoleActivity) {
+        logD("openDestDirectory")
         ChooserDialog(context)
             .withFilter(true, false)
             .withStartFile(File(destDirPath.value).parent)
@@ -196,8 +164,8 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
-    fun start(ctx: DashboardActivity) {
-        logd("start")
+    fun start(ctx: ConsoleActivity) {
+        logD("start")
         // start with coroutine
         // when clearing and task not done, defer to WorkManager
         // Coroutines are useful here for when you have work that needs to be done only if the ViewModel is active.
@@ -216,7 +184,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
                                             val infos =
                         engine.start(srcDirAudioFileCount.value!!, File((srcDirPath.value)), File(destDirPath.value))
                     infos.forEachIndexed { index, stats ->
-                        logd("are we there: $stats")
+                        logD("are we there: $stats")
 //                        engineStats.postValue(EngineStats(metadata, index, index, index.toFloat()))
                         engineStats.postValue(stats)
                         }
@@ -238,7 +206,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
             val formattedTime = "${TimeUnit.MILLISECONDS.toMinutes(time)}:" +
                     "${TimeUnit.MILLISECONDS.toSeconds(time)}\n" +
                     "${TimeUnit.MILLISECONDS.toMillis(time)}"
-            logd(" formatttt: $formattedTime")
+            logD(" formatttt: $formattedTime")
             timeElapsed.postValue(formattedTime)
         }
 
@@ -250,13 +218,13 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 //
 //
 //        // Create an explicit intent for an Activity in your app
-//        val intent = Intent(ctx, DashboardActivity::class.java).apply {
+//        val intent = Intent(ctx, ConsoleActivity::class.java).apply {
 //            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 //        }
 //
 //        // Caution: The integer ID that you give to startForeground() must not be 0.
 //        val pendingIntent: PendingIntent =
-//            Intent(ctx, DashboardActivity::class.java).let { notificationIntent ->
+//            Intent(ctx, ConsoleActivity::class.java).let { notificationIntent ->
 //                PendingIntent.getActivity(ctx, 0, notificationIntent, 0)
 //            }
 //
@@ -302,13 +270,13 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
 
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        logd("onRequestPermissionsResult")
+        logD("onRequestPermissionsResult")
         when (requestCode) {
             REQUEST_CODE_WRITE_EXT_STORAGE -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     val ok = File(Environment.getExternalStorageDirectory().path + "/0awaz").mkdir()
-                    logd("root-ok2: ${ok}")
+                    logD("root-ok2: ${ok}")
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -322,12 +290,12 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        logd("onActivityResult")
+        logD("onActivityResult")
         if (requestCode == REQUEST_CODE_CHOOSE_SOURCE_DIR && resultCode == Activity.RESULT_OK) {
             resultData?.data?.also { uri ->
-                logd("Uri: $uri")
+                logD("Uri: $uri")
                 //content://com.android.externalstorage.documents/document/6362-6134%3ADeitrick%20Haddon-Church%20on%20the%20moon%2FFolder.jpg
-                logd("Uri pat: ${FileUtils.resolvePath(uri)}")
+                logD("Uri pat: ${FileUtils.resolvePath(uri)}")
                 File("${FileUtils.resolvePath(uri) + "/hopeaf"}")
 //                Files.createDirectory(Path())
             }
@@ -335,7 +303,7 @@ class DashboardViewModel(val engine: Engine) : ViewModel() {
     }
 
     override fun onCleared() {
-        logd("onCleared")
+        logD("onCleared")
         super.onCleared()
     }
 

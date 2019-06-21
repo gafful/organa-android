@@ -1,6 +1,7 @@
 package com.mukaase.android.organa
 
 import android.net.Uri
+import com.mukaase.android.organa.util.FileUtils
 import org.hamcrest.core.Is.`is`
 import org.junit.Assert.assertThat
 import org.junit.Test

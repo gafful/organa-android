@@ -1,6 +1,8 @@
-package com.mukaase.android.organa
+package com.mukaase.android.organa.engine
 
 import com.mukaase.android.organa.data.AudioMetadata
+import com.mukaase.android.organa.data.EngineStats
+import com.mukaase.android.organa.util.logD
 import java.io.File
 
 class Engine(private val tagger: Tagger) {
@@ -10,7 +12,7 @@ class Engine(private val tagger: Tagger) {
     private lateinit var currentFile: File
 
     init {
-        logd("Awwwwesoooomme---")
+//        logD("Awwwwesoooomme---")
     }
 
     suspend fun start(audioCount: Int, src: File, dest: File): Sequence<EngineStats> {
@@ -36,7 +38,7 @@ class Engine(private val tagger: Tagger) {
                 currentFile = file
                 metadata = tagger.metadata(file)
                 if (tagger.skipped()) skipped += 1 else cleaned += 1
-                logd("skippp: $skipped --- $cleaned --- ${index.toFloat()+1} --- $audioCount --- ${index.toFloat().div(audioCount)}")
+                logD("skippp: $skipped --- $cleaned --- ${index.toFloat()+1} --- $audioCount --- ${index.toFloat().div(audioCount)}")
                 EngineStats(metadata, cleaned, skipped, percent((index + 1), audioCount))
             }
     }

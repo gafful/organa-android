@@ -1,4 +1,4 @@
-package com.mukaase.android.organa
+package com.mukaase.android.organa.util
 
 //import javax.sound.midi.ShortMessage.CONTINUE
 import android.content.Context
@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.WorkerThread
+import com.mukaase.android.organa.data.Directory
 import java.io.File
 import java.text.DecimalFormat
 
@@ -207,7 +208,7 @@ object FileUtils {
 
     // To get a location on external storage unique for your app
     //Environment#DIRECTORY_MUSIC}
-//    fun appDirectory(context: DashboardActivity) = context.getExternalFilesDirs()
+//    fun appDirectory(context: ConsoleActivity) = context.getExternalFilesDirs()
 
     // To find locations on internal storage for your app
     // Your app's files but goes with uninstalls
@@ -219,7 +220,7 @@ object FileUtils {
     fun externalStorage1(context: Context) = Environment.getExternalStorageDirectory()
 
 
-//    fun internalStorage(context: DashboardActivity) = context.getExternalFilesDirs()
+//    fun internalStorage(context: ConsoleActivity) = context.getExternalFilesDirs()
 
     /* Checks if external storage is available for read and write */
     fun isExternalStorageWritable4(): Boolean {
@@ -273,7 +274,7 @@ object FileUtils {
         var nonAudioCount = 0
 
         file.walkTopDown().forEach {
-            logd("ext is: ${it.extension}")
+            logD("ext is: ${it.extension}")
             when (it.extension.toUpperCase()) {
                 "MP3" -> {
                     audioCount += 1
@@ -285,7 +286,7 @@ object FileUtils {
             }
         }
 
-        logd("countzz: $audioCount -- $nonAudioCount")
+        logD("countzz: $audioCount -- $nonAudioCount")
 //        source = Source(SOURCE_DIRECTORY, srcFile.name, srcFile.path, mp3, ukn)
         return Directory(file.name, file.path, audioCount)
     }

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.example.android.architecture.blueprints.todoapp
+package com.mukaase.android.organa.console
 
-import android.util.EventLogTags
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,12 +52,12 @@ import kotlin.coroutines.ContinuationInterceptor
 @ExperimentalCoroutinesApi
 class MainCoroutineRule : TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
 
-    override fun starting(description: EventLogTags.Description?) {
+    override fun starting(description: Description?) {
         super.starting(description)
         Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
     }
 
-    override fun finished(description: EventLogTags.Description?) {
+    override fun finished(description: Description?) {
         super.finished(description)
         Dispatchers.resetMain()
     }

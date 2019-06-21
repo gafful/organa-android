@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.architecture.blueprints.todoapp
+package com.mukaase.android.organa
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

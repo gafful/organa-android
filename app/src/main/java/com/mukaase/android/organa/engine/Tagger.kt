@@ -1,4 +1,4 @@
-package com.mukaase.android.organa
+package com.mukaase.android.organa.engine
 
 import com.mukaase.android.organa.data.AudioMetadata
 import org.jaudiotagger.tag.Tag
