@@ -3,29 +3,31 @@ package com.mukaase.android.organa.engine
 import com.mukaase.android.organa.data.AudioMetadata
 import com.mukaase.android.organa.data.EngineStats
 import com.mukaase.android.organa.util.logD
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class Engine(private val tagger: Tagger) {
 
     private lateinit var srcFile: File
-    private lateinit var destFile: File
+//    private lateinit var destFile: File
     private lateinit var currentFile: File
 
     init {
 //        logD("Awwwwesoooomme---")
     }
 
-    suspend fun start(audioCount: Int, src: File, dest: File): Sequence<EngineStats> {
+    suspend fun start(audioCount: Int, src: File): Sequence<EngineStats> {
         require(src.isDirectory) { "Source file must be a directory!" }
         require(src.isDirectory) { "Destination file must be a directory!" }
 
         srcFile = src
-        destFile = dest
+//        destFile = dest
         var skipped = 0
         var cleaned = 0
         var metadata: AudioMetadata
 
-        return srcFile
+        return withContext(Dispatchers.IO) {srcFile
             .walkTopDown()
             .filter { !it.isDirectory && !it.isHidden }
             .filter {
@@ -41,6 +43,7 @@ class Engine(private val tagger: Tagger) {
                 logD("skippp: $skipped --- $cleaned --- ${index.toFloat()+1} --- $audioCount --- ${index.toFloat().div(audioCount)}")
                 EngineStats(metadata, cleaned, skipped, percent((index + 1), audioCount))
             }
+        }
     }
 
     private fun percent(nom: Int, denom: Int): Float {

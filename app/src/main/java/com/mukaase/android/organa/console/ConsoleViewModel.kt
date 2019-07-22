@@ -1,33 +1,26 @@
 package com.mukaase.android.organa.console
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Environment
 import androidx.annotation.UiThread
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mukaase.android.organa.R
-import com.mukaase.android.organa.data.Directory
 import com.mukaase.android.organa.data.EngineStats
 import com.mukaase.android.organa.engine.Engine
 import com.mukaase.android.organa.util.FileUtils
 import com.mukaase.android.organa.util.logD
-import com.mukaase.android.organa.util.logE
 import com.obsez.android.lib.filechooser.ChooserDialog
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.concurrent.TimeUnit
-import kotlin.properties.Delegates
-import kotlin.system.measureTimeMillis
+import kotlin.coroutines.CoroutineContext
 
 class ConsoleViewModel(val engine: Engine) : ViewModel() {
 
@@ -38,36 +31,42 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 
     // Default: WhatsApp Audio
     // else: Root
-    var srcDirName: MutableLiveData<String> = MutableLiveData()
-    var srcDirPath: MutableLiveData<String> = MutableLiveData()
-    var srcDirAudioFileCount: MutableLiveData<Int> = MutableLiveData()
+
     var srcFiles: MutableLiveData<Sequence<File>> = MutableLiveData()
     var srcStatus: MutableLiveData<String> = MutableLiveData()
-    var srcDir: MutableLiveData<Directory> = MutableLiveData()
+    var srcDirName: MutableLiveData<String> = MutableLiveData()
+    var srcDirPath: MutableLiveData<String> = MutableLiveData()
+    var srcDirAudioFileCount: MutableLiveData<Int> = MutableLiveData(0)
+
+//    var srcDir: MutableLiveData<Directory> = MutableLiveData()
     var destDirName: MutableLiveData<String> = MutableLiveData()
     var destDirPath: MutableLiveData<String> = MutableLiveData()
     var destDirAvSpace: MutableLiveData<String> = MutableLiveData()
     var destStatus: MutableLiveData<String> = MutableLiveData()
+
+//    var timeElapsed: MutableLiveData<String> = MutableLiveData()
     var engineStats: MutableLiveData<EngineStats> = MutableLiveData()
-    var timeElapsed: MutableLiveData<String> = MutableLiveData()
-    val d: Int by Delegates.observable(0,
-        { prop, old, new ->
-            if (new == 5) {
-                logD("fa ya-ya-ya-yahh $prop --- $old")
-            }
-        })
-    val sourceSet: Set<File> by Delegates.observable(
-        setOf(),
-        { prop, old, new ->
-            new.size
-        })
+    var engineStatsSequence: MutableLiveData<Sequence<EngineStats>> = MutableLiveData()
+
+//    val d: Int by Delegates.observable(0,
+//        { prop, old, new ->
+//            if (new == 5) {
+//                logD("fa ya-ya-ya-yahh $prop --- $old")
+//            }
+//        })
+//    val sourceSet: Set<File> by Delegates.observable(
+//        setOf(),
+//        { prop, old, new ->
+//            new.size
+//        })
 
     /*For your app to display to the user without any visible pauses, the main thread has to update the screen every 16ms
     or more often, which is about 60 frames per second. Many common tasks take longer than this, such as parsing large
     JSON datasets, writing data to a database, or fetching data from the network.*/
-    @UiThread
-    fun setSourceDirectory(source: File = FileUtils.whatsAppAudioDir()) {
-        logD("setSourceDirectory")
+    // assessSourceDirectory
+//    @UiThread
+    fun initSourceDirectory(source: File = FileUtils.whatsAppAudioDir(), ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
+        logD("initSourceDirectory")
 
         srcDirName.value = source.name
         srcDirPath.value = source.path
@@ -80,8 +79,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //        var audioCount = 0
 //        var nonAudioCount = 0
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-
+            withContext(ioDispatcher) {
                 val srcFilesSet = source
                     .walkTopDown()
                     .filter { !it.isDirectory && !it.isHidden }
@@ -91,6 +89,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
                                 it.extension.equals("wma", true)
                     }.mapIndexed { index, file ->
                         logD("file is: ${file}")
+                        println("file is: ${file}")
                         srcDirAudioFileCount.postValue(index + 1)
                         file
                     }
@@ -101,8 +100,8 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
     }
 
     @UiThread
-    fun setDestDirectory(destDir: File = FileUtils.publicMusicDir()) {
-        logD("setDestDirectory")
+    fun initDestDirectory(destDir: File = FileUtils.publicMusicDir()) {
+        logD("initDestDirectory")
         destStatus.value = CHECK_IN_PROGRESS
         destDirName.value = destDir.name
         destDirPath.value = destDir.path
@@ -124,7 +123,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
                 logD("FILE: $path; PATHFILE: $pathFile")
                 //FILE: /storage/emulated/0; PATHFILE: /storage/emulated/0
 
-                setSourceDirectory(pathFile)
+                initSourceDirectory(pathFile)
             }
             .withNavigateUpTo { true }
             .withNavigateTo { true }
@@ -155,7 +154,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
             .withStartFile(File(destDirPath.value).parent)
             .withResources(R.string.choose_dest_folder, R.string.title_choose, R.string.dialog_cancel)
             .withChosenListener { path, pathFile ->
-                setDestDirectory(pathFile)
+                initDestDirectory(pathFile)
             }
             .withNavigateUpTo { true }
             .withNavigateTo { true }
@@ -164,7 +163,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
     }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
-    fun start(ctx: ConsoleActivity) {
+    fun start(audioCount: Int, sourceFile: File, destFile: File) {
         logD("start")
         // start with coroutine
         // when clearing and task not done, defer to WorkManager
@@ -177,24 +176,30 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
         // Create by author, copy and delete
 //        }
 
-        GlobalScope.launch {
-            val time = measureTimeMillis {
-                withContext(Dispatchers.IO) {
-                    try {
-                                            val infos =
-                        engine.start(srcDirAudioFileCount.value!!, File((srcDirPath.value)), File(destDirPath.value))
-                    infos.forEachIndexed { index, stats ->
-                        logD("are we there: $stats")
-//                        engineStats.postValue(EngineStats(metadata, index, index, index.toFloat()))
-                        engineStats.postValue(stats)
-                        }
-                    }
-                    catch(e: Exception) {
-                        logE("${e}")
-                        srcStatus.postValue(e.message)
-                    }
-                }
-            }
+        viewModelScope.launch {
+//            val time = measureTimeMillis {
+//                withContext(Dispatchers.IO) {
+//                    try {
+
+        // TODO: Pass them as arguments
+                        val infos =
+                            engine.start(
+                                audioCount,
+                                sourceFile
+                            )
+            println("infos: $infos")
+            engineStatsSequence.postValue(infos)
+//                        infos.forEachIndexed { index, stats ->
+//                            logD("are we there: $stats")
+////                        engineStats.postValue(EngineStats(metadata, index, index, index.toFloat()))
+//                            engineStats.postValue(stats)
+//                        }
+//                    } catch (e: Exception) {
+//                        logE("$e")
+//                        srcStatus.postValue(e.message)
+//                    }
+//                }
+//            }
             // Which is faster:
             // new SimpleDateFormat("mm:ss:SSS")).format(new Date(time)
             // System.out.printf("%tT", millis-TimeZone.getDefault().getRawOffset());
@@ -203,11 +208,11 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //                TimeUnit.MILLISECONDS.toSeconds(millis) -
 //                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
 //            );
-            val formattedTime = "${TimeUnit.MILLISECONDS.toMinutes(time)}:" +
-                    "${TimeUnit.MILLISECONDS.toSeconds(time)}\n" +
-                    "${TimeUnit.MILLISECONDS.toMillis(time)}"
-            logD(" formatttt: $formattedTime")
-            timeElapsed.postValue(formattedTime)
+//            val formattedTime = "${TimeUnit.MILLISECONDS.toMinutes(time)}:" +
+//                    "${TimeUnit.MILLISECONDS.toSeconds(time)}\n" +
+//                    "${TimeUnit.MILLISECONDS.toMillis(time)}"
+//            logD(" formatttt: $formattedTime")
+//            timeElapsed.postValue(formattedTime)
         }
 
 //        val builder = NotificationCompat.Builder(ctx, CHANNEL_ID)
@@ -296,16 +301,16 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
                 logD("Uri: $uri")
                 //content://com.android.externalstorage.documents/document/6362-6134%3ADeitrick%20Haddon-Church%20on%20the%20moon%2FFolder.jpg
                 logD("Uri pat: ${FileUtils.resolvePath(uri)}")
-                File("${FileUtils.resolvePath(uri) + "/hopeaf"}")
+                File(FileUtils.resolvePath(uri) + "/hopeaf")
 //                Files.createDirectory(Path())
             }
         }
     }
 
-    override fun onCleared() {
-        logD("onCleared")
-        super.onCleared()
-    }
+//    override fun onCleared() {
+//        logD("onCleared")
+//        super.onCleared()
+//    }
 
     companion object {
         internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1

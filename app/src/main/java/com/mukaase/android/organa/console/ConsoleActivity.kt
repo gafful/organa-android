@@ -2,13 +2,10 @@ package com.mukaase.android.organa.console
 
 //import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Environment
-import android.view.Gravity
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -18,10 +15,10 @@ import androidx.lifecycle.ViewModelProviders
 import com.mukaase.android.organa.AnimatorListenerAdapter
 import com.mukaase.android.organa.R
 import com.mukaase.android.organa.util.InjectorUtils
-import com.mukaase.android.organa.util.colour
 import com.mukaase.android.organa.util.formatHtmlString
 import com.mukaase.android.organa.util.logD
 import kotlinx.android.synthetic.main.content_main.*
+import java.io.File
 
 class ConsoleActivity : AppCompatActivity() {
     private lateinit var viewModel: ConsoleViewModel
@@ -196,8 +193,8 @@ class ConsoleActivity : AppCompatActivity() {
             // Permission has already been granted
             // Extra check for isReadable ...
             // TODO: Run at the same time
-            viewModel.setSourceDirectory()
-            viewModel.setDestDirectory()
+            viewModel.initSourceDirectory()
+            viewModel.initDestDirectory()
         }
     }
 
@@ -236,7 +233,7 @@ class ConsoleActivity : AppCompatActivity() {
 //                runGears()
                 logD("wee dunn!!!")
 //                chronometer.start()
-                viewModel.start(this)
+                viewModel.start(viewModel.srcDirAudioFileCount.value!!, File(viewModel.srcDirPath.value), File(viewModel.destDirPath.value))
                 runGears()
 //                updateDisplayInfo()
             },
