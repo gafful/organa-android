@@ -7,5 +7,5 @@ import com.mukaase.android.organa.engine.JAudioTagger
 
 object InjectorUtils {
 
-    fun provideConsoleViewModel(ctx: Context) = ViewModelFactory(Engine(JAudioTagger()))
+    fun provideConsoleViewModel() = ViewModelFactory(Engine(JAudioTagger()))
 }

@@ -6,16 +6,16 @@ import com.mukaase.android.organa.LiveDataTestUtil.getValue
 import com.mukaase.android.organa.engine.Engine
 import com.mukaase.android.organa.engine.FakeTagger
 import com.mukaase.android.organa.util.FileUtils
-import junit.framework.Assert.assertEquals
+//import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
-import java.io.File
 import org.junit.rules.TemporaryFolder
+import java.io.File
 
 
 @ExperimentalCoroutinesApi
@@ -79,7 +79,7 @@ class ConsoleViewModelTest {
 
     @Test
     fun startStartsTheEngine() = runBlockingTest {
-        viewModel.start(1, sourceFolder.root, sourceFolder.root)
+        viewModel.start(1, sourceFolder.root)
 
         assertEquals(2, getValue(viewModel.engineStatsSequence).count())
     }

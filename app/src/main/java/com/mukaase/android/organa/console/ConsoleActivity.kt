@@ -28,7 +28,7 @@ class ConsoleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
-        val vmFactory = InjectorUtils.provideConsoleViewModel(this)
+        val vmFactory = InjectorUtils.provideConsoleViewModel()
         viewModel = ViewModelProviders.of(this, vmFactory).get(ConsoleViewModel::class.java)
         initObservers()
         checkStoragePermissions()
@@ -199,7 +199,7 @@ class ConsoleActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        viewModel.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        viewModel.onRequestPermissionsResult(requestCode, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
@@ -233,7 +233,7 @@ class ConsoleActivity : AppCompatActivity() {
 //                runGears()
                 logD("wee dunn!!!")
 //                chronometer.start()
-                viewModel.start(viewModel.srcDirAudioFileCount.value!!, File(viewModel.srcDirPath.value), File(viewModel.destDirPath.value))
+                viewModel.start(viewModel.srcDirAudioFileCount.value!!, File(viewModel.srcDirPath.value))
                 runGears()
 //                updateDisplayInfo()
             },

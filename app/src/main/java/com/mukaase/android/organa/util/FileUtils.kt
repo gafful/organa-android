@@ -217,7 +217,7 @@ object FileUtils {
     fun internalStorage(context: Context) = context.filesDir
 
     fun externalStorage() = Environment.getExternalStorageDirectory()
-    fun externalStorage1(context: Context) = Environment.getExternalStorageDirectory()
+//    fun externalStorage1(context: Context) = Environment.getExternalStorageDirectory()
 
 
 //    fun internalStorage(context: ConsoleActivity) = context.getExternalFilesDirs()

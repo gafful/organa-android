@@ -153,7 +153,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
             .withFilter(true, false)
             .withStartFile(File(destDirPath.value).parent)
             .withResources(R.string.choose_dest_folder, R.string.title_choose, R.string.dialog_cancel)
-            .withChosenListener { path, pathFile ->
+            .withChosenListener { _, pathFile ->
                 initDestDirectory(pathFile)
             }
             .withNavigateUpTo { true }
@@ -163,7 +163,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
     }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
-    fun start(audioCount: Int, sourceFile: File, destFile: File) {
+    fun start(audioCount: Int, sourceFile: File) {
         logD("start")
         // start with coroutine
         // when clearing and task not done, defer to WorkManager
@@ -274,7 +274,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //    }
 
 
-    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
         logD("onRequestPermissionsResult")
         when (requestCode) {
             REQUEST_CODE_WRITE_EXT_STORAGE -> {
