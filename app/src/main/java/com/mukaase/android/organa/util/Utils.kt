@@ -27,6 +27,9 @@ fun Any.logD(message: String){
 
 fun Any.logE(message: String) = Log.e("Organa", message)
 
+fun Any.logW(message: String) = Log.w("Organa", message)
+fun Any.logI(message: String) = Log.i("Organa", message)
+
 // Debug - method + params
 // Info - system / user initiated call
 // Warn - could become an error

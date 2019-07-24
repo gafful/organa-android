@@ -14,13 +14,14 @@ import com.mukaase.android.organa.data.EngineStats
 import com.mukaase.android.organa.engine.Engine
 import com.mukaase.android.organa.util.FileUtils
 import com.mukaase.android.organa.util.logD
+import com.mukaase.android.organa.util.logI
+import com.mukaase.android.organa.util.logW
 import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import kotlin.coroutines.CoroutineContext
 
 class ConsoleViewModel(val engine: Engine) : ViewModel() {
 
@@ -38,13 +39,13 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
     var srcDirPath: MutableLiveData<String> = MutableLiveData()
     var srcDirAudioFileCount: MutableLiveData<Int> = MutableLiveData(0)
 
-//    var srcDir: MutableLiveData<Directory> = MutableLiveData()
+    //    var srcDir: MutableLiveData<Directory> = MutableLiveData()
     var destDirName: MutableLiveData<String> = MutableLiveData()
     var destDirPath: MutableLiveData<String> = MutableLiveData()
     var destDirAvSpace: MutableLiveData<String> = MutableLiveData()
     var destStatus: MutableLiveData<String> = MutableLiveData()
 
-//    var timeElapsed: MutableLiveData<String> = MutableLiveData()
+    //    var timeElapsed: MutableLiveData<String> = MutableLiveData()
     var engineStats: MutableLiveData<EngineStats> = MutableLiveData()
     var engineStatsSequence: MutableLiveData<Sequence<EngineStats>> = MutableLiveData()
 
@@ -65,8 +66,12 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
     JSON datasets, writing data to a database, or fetching data from the network.*/
     // assessSourceDirectory
 //    @UiThread
-    fun initSourceDirectory(source: File = FileUtils.whatsAppAudioDir(), ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
+    fun initSourceDirectory(
+        source: File = FileUtils.whatsAppAudioDir(),
+        ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    ) {
         logD("initSourceDirectory")
+        logD("source.canRead() ${source.canRead()} -- source.setReadable(true): ${source.setReadable(true)}")
 
         srcDirName.value = source.name
         srcDirPath.value = source.path
@@ -177,16 +182,12 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //        }
 
         viewModelScope.launch {
-//            val time = measureTimeMillis {
+            //            val time = measureTimeMillis {
 //                withContext(Dispatchers.IO) {
 //                    try {
 
-        // TODO: Pass them as arguments
-                        val infos =
-                            engine.start(
-                                audioCount,
-                                sourceFile
-                            )
+            // TODO: Pass them as arguments
+            val infos = engine.start(audioCount, sourceFile)
             println("infos: $infos")
             engineStatsSequence.postValue(infos)
 //                        infos.forEachIndexed { index, stats ->
@@ -250,10 +251,6 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 ////        ctx.startForeground(ONGOING_NOTIFICATION_ID, notification)
     }
 
-    fun stopWatch() {
-
-    }
-
 //    // Because you must create the notification channel before posting any notifications on Android 8.0 and higher,
 //    // you should execute this code as soon as your app starts.
 //    private fun createNotificationChannel() {
@@ -273,47 +270,8 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //        }
 //    }
 
-
-    fun onRequestPermissionsResult(requestCode: Int, grantResults: IntArray) {
-        logD("onRequestPermissionsResult")
-        when (requestCode) {
-            REQUEST_CODE_WRITE_EXT_STORAGE -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    val ok = File(Environment.getExternalStorageDirectory().path + "/0awaz").mkdir()
-                    logD("root-ok2: ${ok}")
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
-            }
-        }
-    }
-
-    fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-        logD("onActivityResult")
-        if (requestCode == REQUEST_CODE_CHOOSE_SOURCE_DIR && resultCode == Activity.RESULT_OK) {
-            resultData?.data?.also { uri ->
-                logD("Uri: $uri")
-                //content://com.android.externalstorage.documents/document/6362-6134%3ADeitrick%20Haddon-Church%20on%20the%20moon%2FFolder.jpg
-                logD("Uri pat: ${FileUtils.resolvePath(uri)}")
-                File(FileUtils.resolvePath(uri) + "/hopeaf")
-//                Files.createDirectory(Path())
-            }
-        }
-    }
-
-//    override fun onCleared() {
-//        logD("onCleared")
-//        super.onCleared()
-//    }
-
     companion object {
-        internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
+//        internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
         internal const val CHECK_IN_PROGRESS = "CHECK_IN_PROGRESS"
         internal const val CHECK_OK = "CHECK_OK"
         internal const val CHECK_FAIL = "CHECK_FAIL"

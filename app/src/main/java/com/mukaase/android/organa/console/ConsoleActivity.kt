@@ -2,6 +2,7 @@ package com.mukaase.android.organa.console
 
 //import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -14,9 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mukaase.android.organa.AnimatorListenerAdapter
 import com.mukaase.android.organa.R
-import com.mukaase.android.organa.util.InjectorUtils
-import com.mukaase.android.organa.util.formatHtmlString
-import com.mukaase.android.organa.util.logD
+import com.mukaase.android.organa.util.*
 import kotlinx.android.synthetic.main.content_main.*
 import java.io.File
 
@@ -31,6 +30,7 @@ class ConsoleActivity : AppCompatActivity() {
         val vmFactory = InjectorUtils.provideConsoleViewModel()
         viewModel = ViewModelProviders.of(this, vmFactory).get(ConsoleViewModel::class.java)
         initObservers()
+        viewModel.initSourceDirectory()
         checkStoragePermissions()
     }
 
@@ -163,17 +163,15 @@ class ConsoleActivity : AppCompatActivity() {
 
     fun checkStoragePermissions() {
         logD("checkStoragePermissions")
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
+        if (ContextCompat
+                .checkSelfPermission(
                     this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            ) {
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -182,29 +180,50 @@ class ConsoleActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    ConsoleViewModel.REQUEST_CODE_WRITE_EXT_STORAGE
+                    REQUEST_CODE_WRITE_EXT_STORAGE
                 )
-
-                // REQUEST_CODE_WRITE_EXT_STORAGE is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
             // Permission has already been granted
-            // Extra check for isReadable ...
             // TODO: Run at the same time
-            viewModel.initSourceDirectory()
             viewModel.initDestDirectory()
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        viewModel.onRequestPermissionsResult(requestCode, grantResults)
+        logD("onRequestPermissionsResult")
+        when (requestCode) {
+            REQUEST_CODE_WRITE_EXT_STORAGE -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    logI("WRITE_EXT_STORAGE permissions granted")
+                    viewModel.initDestDirectory()
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    logW("Permissions not granted")
+                    dashboard_display_2.text = getString(R.string.dest_msg, getString(R.string.no_write_permissions))
+                }
+                return
+            }
+            else -> {
+                // Ignore all other requests.
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
         super.onActivityResult(requestCode, resultCode, resultData)
-        viewModel.onActivityResult(requestCode, resultCode, resultData)
+        logD("onActivityResult")
+        if (requestCode == REQUEST_CODE_WRITE_EXT_STORAGE && resultCode == Activity.RESULT_OK) {
+            resultData?.data?.also { uri ->
+                logD("Uri: $uri")
+                //content://com.android.externalstorage.documents/document/6362-6134%3ADeitrick%20Haddon-Church%20on%20the%20moon%2FFolder.jpg
+                logD("Uri pat: ${FileUtils.resolvePath(uri)}")
+                File(FileUtils.resolvePath(uri) + "/hopeaf")
+//                Files.createDirectory(Path())
+            }
+        }
     }
 
     fun onSourceDirBtnClick(@Suppress("UNUSED_PARAMETER") v: View) {
@@ -253,37 +272,6 @@ class ConsoleActivity : AppCompatActivity() {
     fun onSettingsClick(@Suppress("UNUSED_PARAMETER") v: View) {
         logD("onSettingsClick")
     }
-
-//    private fun updateDisplayInfo() {
-//        // Progress
-//        dashboard_display_1.apply {
-//            text = "[SCANNING]: AUD-WA0001231238.mp3"
-//            gravity = Gravity.START
-//            setTextColor(colour(R.color.bright_2))
-//        }
-//        dashboard_display_2.apply {
-//            text = "TITLE: KPO"
-//            gravity = Gravity.START
-//            setTextColor(resources.getColor(R.color.orange))
-//        }
-//        dashboard_display_3.apply {
-//            text = "ALBULM: KPAY"
-//            gravity = Gravity.START
-//            textSize = 14f
-//            setTextColor(resources.getColor(R.color.orange))
-//        }
-//        dashboard_display_4.apply {
-//            text = "AUTHOR: KPA"
-//            gravity = Gravity.START
-//            setTextColor(resources.getColor(R.color.orange))
-//        }
-//        dashboard_display_5.apply {
-//            text = "STATUS: MATCH | SKIPPED"
-//            gravity = Gravity.START
-//            // IF match, green, else, ...
-//            setTextColor(resources.getColor(R.color.orange))
-//        }
-//    }
 
     private fun runGears() {
         logD("runGears")
@@ -344,20 +332,8 @@ class ConsoleActivity : AppCompatActivity() {
 //            }
 //        }
 //    }
-//
-//    private fun things() {
-//        //        dashboard_display_2.text = "TITLE: KPO"
-////        dashboard_display_3.text = "ALBULM: KPAY"
-////        dashboard_display_4.text = "AUTHOR: KPA"
-////        dashboard_display_5.text = "STATUS: MATCH | SKIPPED"
-////        dashboard_display_6.text = true
-//
-////        // Error
-////        dashboard_display_1.text = "ALERT!!!"
-////        dashboard_display_2.text = ""
-////        dashboard_display_3.text = "DESTINATION FULL"
-////        dashboard_display_4.text = ""
-////        dashboard_display_5.text = ""
-//
-//    }
+
+    companion object {
+        internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
+    }
 }

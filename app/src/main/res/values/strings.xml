@@ -47,4 +47,6 @@
     <string name="progress_percent">%1$d</string>
     <string name="scan_complete">SCAN COMPLETE</string>
     <string name="unknown">UNKNOWN</string>
+    <string name="dest_msg">DEST: %1$s</string>
+    <string name="no_write_permissions">Write permissions not granted.</string>
 </resources>

@@ -83,19 +83,4 @@ class ConsoleViewModelTest {
 
         assertEquals(2, getValue(viewModel.engineStatsSequence).count())
     }
-
-//    @Test
-//    fun createCreatesAconsoleViewModelInstance(){
-//        mainCoroutineRule.pauseDispatcher()
-//
-//        val f = mock(File::class.java)
-//        val ff = File("/")
-//
-//        viewModel.initSourceDirectory(f)
-//
-//
-//        // initSourceDirectory sets srcDir nam, path, status, srcDirAudioFileCount, srcFiles, srcStatus
-//        assertThat(getValue(viewModel.srcDirName)).contains("whoop")
-////        assertThat()
-//    }
 }
