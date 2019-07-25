@@ -9,7 +9,7 @@
         tools:showIn="@layout/activity_main"
         android:background="@drawable/main_bg_bordered"
         android:padding="5dp"
-        tools:context=".DashboardActivity">
+        tools:context=".console.ConsoleActivity">
 
     <ProgressBar
             android:id="@+id/dashboard_active_bar_top"

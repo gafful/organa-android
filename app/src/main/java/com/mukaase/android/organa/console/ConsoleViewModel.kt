@@ -1,10 +1,6 @@
 package com.mukaase.android.organa.console
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Environment
 import androidx.annotation.UiThread
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +10,6 @@ import com.mukaase.android.organa.data.EngineStats
 import com.mukaase.android.organa.engine.Engine
 import com.mukaase.android.organa.util.FileUtils
 import com.mukaase.android.organa.util.logD
-import com.mukaase.android.organa.util.logI
 import com.mukaase.android.organa.util.logW
 import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.coroutines.CoroutineDispatcher
@@ -64,25 +59,36 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
     /*For your app to display to the user without any visible pauses, the main thread has to update the screen every 16ms
     or more often, which is about 60 frames per second. Many common tasks take longer than this, such as parsing large
     JSON datasets, writing data to a database, or fetching data from the network.*/
-    // assessSourceDirectory
 //    @UiThread
     fun initSourceDirectory(
         source: File = FileUtils.whatsAppAudioDir(),
         ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     ) {
         logD("initSourceDirectory")
-        logD("source.canRead() ${source.canRead()} -- source.setReadable(true): ${source.setReadable(true)}")
+        var sourceFile = source
 
-        srcDirName.value = source.name
-        srcDirPath.value = source.path
-        srcStatus.value = CHECK_IN_PROGRESS
+        if (!sourceFile.isDirectory) {
+            logW("WhatsApp Audio folder [${sourceFile.path}] not found")
+            sourceFile = FileUtils.publicMusicDir()
+        }
 
-        if (!source.isDirectory) srcStatus.value = CHECK_FAIL
-        if (!source.canRead() && !source.setReadable(true)) srcStatus.value = UNREADABLE
+        if (!sourceFile.isDirectory) {
+            logW("Public Music folder [${sourceFile.path}] not found")
+            srcDirName.value = DEFAULT_SOURCE_FOLDERS_NOT_FOUND
+            srcDirPath.value = DEFAULT_SOURCE_FOLDERS_NOT_FOUND
+            srcStatus.value = DEFAULT_SOURCE_FOLDERS_NOT_FOUND
+            return
+        }
 
+        srcDirName.value = sourceFile.name
+        srcDirPath.value = sourceFile.path
+        srcStatus.value = CHECK_OK
 
-//        var audioCount = 0
-//        var nonAudioCount = 0
+        countAudioFiles(sourceFile, ioDispatcher)
+    }
+
+    private fun countAudioFiles(source: File, ioDispatcher: CoroutineDispatcher) {
+        logD("countAudioFiles ${source.listFiles().size}")
         viewModelScope.launch {
             withContext(ioDispatcher) {
                 val srcFilesSet = source
@@ -274,7 +280,7 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //        internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
         internal const val CHECK_IN_PROGRESS = "CHECK_IN_PROGRESS"
         internal const val CHECK_OK = "CHECK_OK"
-        internal const val CHECK_FAIL = "CHECK_FAIL"
+        internal const val DEFAULT_SOURCE_FOLDERS_NOT_FOUND = "DEFAULT_SOURCE_FOLDERS_NOT_FOUND"
         internal const val UNREADABLE = "UNREADABLE"
         internal const val UNWRITABLE = "UNWRITABLE"
     }

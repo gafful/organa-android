@@ -39,12 +39,18 @@ class ConsoleActivity : AppCompatActivity() {
 
         // Source
         viewModel.srcDirName.observe(this, Observer {
-            dashboard_src_panel_name.text = it
-//            dashboard_display_1.text = getString(R.string.system_check)
-//            dashboard_display_2.text = getString(R.string._ok)
+            val text = when (it) {
+                ConsoleViewModel.DEFAULT_SOURCE_FOLDERS_NOT_FOUND -> getString(R.string.unknown)
+                else -> it
+            }
+            dashboard_src_panel_name.text = text
         })
         viewModel.srcDirPath.observe(this, Observer {
-            dashboard_src_panel_path.text = it
+            val text = when (it) {
+                ConsoleViewModel.DEFAULT_SOURCE_FOLDERS_NOT_FOUND -> getString(R.string.unknown)
+                else -> it
+            }
+            dashboard_src_panel_path.text = text
         })
         // 49MB or 89 audio files
         viewModel.srcDirAudioFileCount.observe(this, Observer {
@@ -71,7 +77,7 @@ class ConsoleActivity : AppCompatActivity() {
             val display1 = when (status) {
                 ConsoleViewModel.CHECK_IN_PROGRESS -> getString(R.string._scanning, "SOURCE")
                 ConsoleViewModel.CHECK_OK -> getString(R.string._ok, "SOURCE")
-                ConsoleViewModel.CHECK_FAIL -> getString(R.string._fail, "SOURCE")
+                ConsoleViewModel.DEFAULT_SOURCE_FOLDERS_NOT_FOUND -> getString(R.string.src_msg, getString(R.string.default_source_not_found))
                 ConsoleViewModel.UNREADABLE -> getString(R.string._unreadable, "SOURCE")
                 else -> getString(R.string.unknown)
             }

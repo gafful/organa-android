@@ -57,7 +57,7 @@ class ConsoleViewModelTest {
     // Apparently I have to refactor
     // https://stackoverflow.com/questions/17681708/mocking-files-in-java-mock-contents-mockito
     @Test
-    fun setsUpSource_GivenValidSourceFile() {
+    fun setsPublicMusicDirectoryAsSourc_WhenWhatsAppAudioDirectory_CannotBeFound() {
         viewModel.initSourceDirectory(sourceDir, Dispatchers.Unconfined)
 
         assertThat(getValue(viewModel.srcDirName)).contains(sourceDir.name)
@@ -66,6 +66,17 @@ class ConsoleViewModelTest {
         assertEquals(2, getValue(viewModel.srcFiles).count())
         assertEquals(2, getValue(viewModel.srcDirAudioFileCount))
     }
+
+//    @Test
+//    fun setsUpSource_GivenValidSourceFile() {
+//        viewModel.initSourceDirectory(sourceDir, Dispatchers.Unconfined)
+//
+//        assertThat(getValue(viewModel.srcDirName)).contains(sourceDir.name)
+//        assertThat(getValue(viewModel.srcDirPath)).contains(sourceDir.path)
+//        assertThat(getValue(viewModel.srcStatus)).contains(ConsoleViewModel.CHECK_OK)
+//        assertEquals(2, getValue(viewModel.srcFiles).count())
+//        assertEquals(2, getValue(viewModel.srcDirAudioFileCount))
+//    }
 
     @Test
     fun setsUpDestination_GivenValidDestinationFile() {
