@@ -52,22 +52,31 @@ class ConsoleActivity : AppCompatActivity() {
             }
             dashboard_src_panel_path.text = text
         })
-        // 49MB or 89 audio files
         viewModel.srcDirAudioFileCount.observe(this, Observer {
             dashboard_src_panel_file_count.text = it.toString()
         })
 
         // Destination
         viewModel.destDirName.observe(this, Observer {
-            dashboard_dest_panel_name.text = it
-//            dashboard_display_3.text = getString(R.string.dest_ok)
-//            dashboard_display_5.text = getString(R.string.power_up_to_start)
+            val text = when (it) {
+                ConsoleViewModel.DEST_FOLDER_INVALID -> getString(R.string.unknown)
+                else -> it
+            }
+            dashboard_dest_panel_name.text = text
         })
         viewModel.destDirPath.observe(this, Observer {
-            dashboard_dest_panel_path.text = it
+            val text = when (it) {
+                ConsoleViewModel.DEST_FOLDER_INVALID -> getString(R.string.unknown)
+                else -> it
+            }
+            dashboard_dest_panel_path.text = text
         })
         viewModel.destDirAvSpace.observe(this, Observer {
-            dashboard_dest_panel_file_count.text = it
+            val text = when (it) {
+                ConsoleViewModel.DEST_FOLDER_INVALID -> getString(R.string.unknown)
+                else -> it
+            }
+            dashboard_dest_panel_file_count.text = text
         })
 
 
@@ -75,11 +84,10 @@ class ConsoleActivity : AppCompatActivity() {
         viewModel.srcStatus.observe(this, Observer { status ->
             logD("display10: $status")
             val display1 = when (status) {
-                ConsoleViewModel.CHECK_IN_PROGRESS -> getString(R.string._scanning, "SOURCE")
-                ConsoleViewModel.CHECK_OK -> getString(R.string._ok, "SOURCE")
+                ConsoleViewModel.CHECK_OK -> getString(R.string.src_msg, getString(R.string.ok))
                 ConsoleViewModel.DEFAULT_SOURCE_FOLDERS_NOT_FOUND -> getString(R.string.src_msg, getString(R.string.default_source_not_found))
-                ConsoleViewModel.UNREADABLE -> getString(R.string._unreadable, "SOURCE")
-                else -> getString(R.string.unknown)
+//                ConsoleViewModel.UNREADABLE -> getString(R.string._unreadable, "SOURCE")
+                else -> getString(R.string.src_msg, getString(R.string.unknown))
             }
             logD("display11: $display1")
             dashboard_display_1.text = display1
@@ -87,11 +95,9 @@ class ConsoleActivity : AppCompatActivity() {
 
         viewModel.destStatus.observe(this, Observer { status ->
             val display2 = when (status) {
-                //todo: add an "initializing" state
-                ConsoleViewModel.CHECK_IN_PROGRESS -> getString(R.string._scanning, "DESTINATION")
-                ConsoleViewModel.CHECK_OK -> getString(R.string._ok, "DESTINATION")
-                ConsoleViewModel.UNWRITABLE -> getString(R.string._unwritable, "DESTINATION")
-                else -> getString(R.string.unknown)
+                ConsoleViewModel.CHECK_OK -> getString(R.string.dest_msg, getString(R.string.ok))
+                ConsoleViewModel.DEST_FOLDER_INVALID -> getString(R.string.dest_msg, getString(R.string.no_default_dest_folder))
+                else -> getString(R.string.dest_msg, getString(R.string.unknown))
             }
             dashboard_display_2.text = display2
         })
@@ -157,11 +163,11 @@ class ConsoleActivity : AppCompatActivity() {
         dashboard_dest_panel_name.isSelected = true
 //        dashboard_dest_panel_path.isSelected = true
 
-        logD("wan2: ${Environment.getExternalStorageDirectory()}")
-        getExternalFilesDirs(null).forEach({
-            logD("it: $it")
-        })
-        logD("two: ${filesDir}")
+//        logD("wan2: ${Environment.getExternalStorageDirectory()}")
+//        getExternalFilesDirs(null).forEach({
+//            logD("it: $it")
+//        })
+//        logD("two: ${filesDir}")
 //        2019-05-15 20:54:20.108 14345-14345/com.mukaase.android.organa I/System.out: wan2: /storage/emulated/0
 //        2019-05-15 20:54:20.114 14345-14345/com.mukaase.android.organa I/System.out: wan: [Ljava.io.File;@90b0e5
 //        2019-05-15 20:54:20.114 14345-14345/com.mukaase.android.organa I/System.out: two: /data/user/0/com.mukaase.android.organa/files

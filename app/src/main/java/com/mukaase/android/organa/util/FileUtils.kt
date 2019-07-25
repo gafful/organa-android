@@ -217,7 +217,9 @@ object FileUtils {
     fun internalStorage(context: Context) = context.filesDir
 
     fun externalStorage() = Environment.getExternalStorageDirectory()
-//    fun externalStorage1(context: Context) = Environment.getExternalStorageDirectory()
+    fun appDirectory() = File(externalStorage().path, "Organa")
+    fun appMusicDir() = File(externalStorage().path, "Organa/Organa Music")
+    fun appMusicDirPath() = externalStorage().path + "Organa/Organa Music"
 
 
 //    fun internalStorage(context: ConsoleActivity) = context.getExternalFilesDirs()

@@ -106,20 +106,29 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
                     }
                 srcFiles.postValue(srcFilesSet)
             }
-            srcStatus.postValue(CHECK_OK)
         }
     }
 
     @UiThread
-    fun initDestDirectory(destDir: File = FileUtils.publicMusicDir()) {
-        logD("initDestDirectory")
-        destStatus.value = CHECK_IN_PROGRESS
+    fun initDestDirectory(destDir: File = FileUtils.appMusicDir()) {
+        logD("initDestDirectory $destDir ${destDir.isDirectory} -- ${destDir.exists()}")
+
+        if (!destDir.isDirectory) {
+            if (!destDir.exists() && !destDir.mkdirs()) {
+                destStatus.value = DEST_FOLDER_INVALID
+                destDirName.value = DEST_FOLDER_INVALID
+                destDirPath.value = DEST_FOLDER_INVALID
+                destDirAvSpace.value = DEST_FOLDER_INVALID
+                return
+            }
+        }
+        destStatus.value = CHECK_OK
         destDirName.value = destDir.name
         destDirPath.value = destDir.path
         destDirAvSpace.value = FileUtils.readableFileSize(destDir.freeSpace)
-        logD("destDir.canWrite(): ${destDir.canWrite()} ---- destDir.setWritable(true): ${destDir.setWritable(true)}")
-        if (destDir.canWrite() || destDir.setWritable(true)) destStatus.value = CHECK_OK else destStatus.value =
-            UNWRITABLE
+//        logD("destDir.canWrite(): ${destDir.canWrite()} ---- destDir.setWritable(true): ${destDir.setWritable(true)}")
+//        if (destDir.canWrite() || destDir.setWritable(true)) destStatus.value = CHECK_OK else destStatus.value =
+//            UNWRITABLE
     }
 
     @SuppressLint("PrivateResource")
@@ -277,10 +286,11 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
 //    }
 
     companion object {
-//        internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
+        //        internal const val REQUEST_CODE_WRITE_EXT_STORAGE = 1
         internal const val CHECK_IN_PROGRESS = "CHECK_IN_PROGRESS"
         internal const val CHECK_OK = "CHECK_OK"
         internal const val DEFAULT_SOURCE_FOLDERS_NOT_FOUND = "DEFAULT_SOURCE_FOLDERS_NOT_FOUND"
+        internal const val DEST_FOLDER_INVALID = "DEST_FOLDER_INVALID"
         internal const val UNREADABLE = "UNREADABLE"
         internal const val UNWRITABLE = "UNWRITABLE"
     }

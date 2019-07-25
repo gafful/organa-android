@@ -6,6 +6,7 @@
     <string name="panel">ORGANA CONTROL BOARD</string>
     <string name="destination">DESTINATION</string>
     <string name="source">SOURCE</string>
+    <string name="count">COUNT</string>
 
     <string name="cleaned">[ CLEANED ]</string>
     <string name="skipped">[ SKIPPED ]</string>
@@ -48,11 +49,14 @@
     <string name="scan_complete">SCAN COMPLETE</string>
     <string name="unknown">UNKNOWN</string>
 
+    <string name="ok">OK</string>
+
     <!--Source-->
     <string name="src_msg">SOURCE: %1$s</string>
     <string name="default_source_not_found">Default folders not found.\nChoose a folder with audio files.</string>
 
     <!--Destination-->
     <string name="dest_msg">DEST: %1$s</string>
+    <string name="no_default_dest_folder">Unable to create default folder.\nChoose a destination folder.</string>
     <string name="no_write_permissions">Write permissions not granted.</string>
 </resources>
