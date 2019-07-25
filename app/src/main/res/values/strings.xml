@@ -49,6 +49,8 @@
     <string name="scan_complete">SCAN COMPLETE</string>
     <string name="unknown">UNKNOWN</string>
 
+    <string name="files">files</string>
+    <string name="num_str">%1$d %2$s</string>
     <string name="ok">OK</string>
 
     <!--Source-->

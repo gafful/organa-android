@@ -84,29 +84,30 @@ class ConsoleViewModel(val engine: Engine) : ViewModel() {
         srcDirPath.value = sourceFile.path
         srcStatus.value = CHECK_OK
 
-        countAudioFiles(sourceFile, ioDispatcher)
+        viewModelScope.launch {
+            countAudioFiles(sourceFile, ioDispatcher)
+        }
     }
 
-    private fun countAudioFiles(source: File, ioDispatcher: CoroutineDispatcher) {
+    private suspend fun countAudioFiles(source: File, ioDispatcher: CoroutineDispatcher) {
         logD("countAudioFiles ${source.listFiles().size}")
-        viewModelScope.launch {
+//        viewModelScope.launch {
             withContext(ioDispatcher) {
-                val srcFilesSet = source
-                    .walkTopDown()
+                source.walkTopDown()
                     .filter { !it.isDirectory && !it.isHidden }
                     .filter {
                         it.extension.equals("mp3", true) or
                                 it.extension.equals("m4a", true) or
                                 it.extension.equals("wma", true)
-                    }.mapIndexed { index, file ->
-                        logD("file is: ${file}")
-                        println("file is: ${file}")
+                    }.forEachIndexed { index, file ->
+//                        logD("file is: ${file}")
+//                        println("file is: ${file}")
                         srcDirAudioFileCount.postValue(index + 1)
-                        file
+//                        file
                     }
-                srcFiles.postValue(srcFilesSet)
+//                srcFiles.postValue(srcFilesSet)
             }
-        }
+//        }
     }
 
     @UiThread

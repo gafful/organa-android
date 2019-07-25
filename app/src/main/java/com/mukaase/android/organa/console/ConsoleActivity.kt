@@ -53,7 +53,8 @@ class ConsoleActivity : AppCompatActivity() {
             dashboard_src_panel_path.text = text
         })
         viewModel.srcDirAudioFileCount.observe(this, Observer {
-            dashboard_src_panel_file_count.text = it.toString()
+            dashboard_src_panel_file_count.text = "$it files"
+//            dashboard_src_panel_file_count.text = getString(R.string.num_str, getString(R.string.files))
         })
 
         // Destination
@@ -262,7 +263,7 @@ class ConsoleActivity : AppCompatActivity() {
 //                animationView.performanceTracker?.logRenderTimes()
 //                updateRenderTimesPerLayer()
 //                runGears()
-                logD("wee dunn!!!")
+//                logD("wee dunn!!!")
 //                chronometer.start()
                 viewModel.start(viewModel.srcDirAudioFileCount.value!!, File(viewModel.srcDirPath.value))
                 runGears()

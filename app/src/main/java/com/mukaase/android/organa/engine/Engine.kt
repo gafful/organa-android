@@ -18,6 +18,7 @@ class Engine(private val tagger: Tagger) {
     }
 
     suspend fun start(audioCount: Int, src: File): Sequence<EngineStats> {
+        logD("start ---${src.listFiles().size}")
         require(src.isDirectory) { "Source file must be a directory!" }
         require(src.isDirectory) { "Destination file must be a directory!" }
 
@@ -27,7 +28,9 @@ class Engine(private val tagger: Tagger) {
         var cleaned = 0
         var metadata: AudioMetadata
 
-        return withContext(Dispatchers.IO) {srcFile
+        return withContext(Dispatchers.IO) {
+            logD("start --- you too")
+            srcFile
             .walkTopDown()
             .filter { !it.isDirectory && !it.isHidden }
             .filter {
